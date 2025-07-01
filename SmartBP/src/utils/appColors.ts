@@ -1,0 +1,23 @@
+export const appColors = {
+  primary: '#FFB400',
+  secondary: '#03DAC6',
+  background: '#FFFFFF',
+  surface: '#F5F5F5',
+  error: '#B00020',
+  textPrimary: '#313131',
+  textSecondary: '#C1c1c1',
+  border: '#E0E0E0',
+  disabled: '#BDBDBD',
+  placeholder: '#9E9E9E',
+  notification: '#FF4081',
+  title: '#6C6063',
+  diastolic: '#00C57E',
+  Systolic: '#F7B11E',
+  cardLearn: '#4DD904',
+  cardBPNormal: '#FF36A4',
+  cardWhoHighBP: '#FD3A3B',
+  cardHowHighBP: '#39B8FF',
+  cardLowerBP: '#9556FF',
+  cardpPreventBP: '#FF9432',
+  cardBg:'#FFFFFF'
+};
