@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import SplashScreen from '../SplashScreen';
-import HomeScreen from '../home/HomeScreen';
 import MainNavigation from '../navigation/MainNavigation';
 
 const AppRouter = () => {
@@ -9,7 +8,7 @@ const AppRouter = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
-    }, 1500);
+    }, 3000);
     return () => clearTimeout(timeout);
   }, []);
   return <>{isShowSplash ? <SplashScreen /> : <MainNavigation />}</>;

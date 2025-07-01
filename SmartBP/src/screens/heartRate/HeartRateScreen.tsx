@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const SettingScreen = () => {
+const HeartRateScreen = () => {
   return (
     <View>
-      <Text>SettingScreen</Text>
+      <Text>HeartRateScreen</Text>
     </View>
   )
 }
 
-export default SettingScreen
+export default HeartRateScreen
 
 const styles = StyleSheet.create({})
