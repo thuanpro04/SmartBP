@@ -5,10 +5,15 @@ import { appColors } from '../../../utils/appColors';
 interface Props {
   label: string;
   style?: StyleProp<TextStyle>;
+  numberOfLine?: number;
 }
 const TextComponent = (props: Props) => {
-  const { label, style } = props;
-  return <Text style={[styles.textStyle, style]}>{label}</Text>;
+  const { label, style, numberOfLine } = props;
+  return (
+    <Text style={[styles.textStyle, style]} numberOfLines={numberOfLine}>
+      {label}
+    </Text>
+  );
 };
 
 export default TextComponent;

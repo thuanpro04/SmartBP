@@ -16,7 +16,7 @@ interface Props {
   title: string;
   text?: string;
   style?: StyleProp<ViewStyle>;
-  onPress: () => void;
+  onPress?: () => void;
   icon?: ReactNode;
 }
 const HeaderComponent = (props: Props) => {
@@ -39,6 +39,8 @@ export default HeaderComponent;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: appColors.cardBg,
   },
   title: {
     fontSize: appSizes.xxxLarge,
