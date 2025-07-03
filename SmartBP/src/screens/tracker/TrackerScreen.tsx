@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   View,
   Easing,
+  SafeAreaView,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import {
+  ButtonComponent,
   ContainerComponent,
   HeaderComponent,
   RowComponent,
@@ -17,12 +19,13 @@ import { appColors } from '../../utils/appColors';
 import { appSizes } from '../../utils/appSizes';
 import BloodPeressureScreen from '../bloodPeressure/BloodPeressureScreen';
 import HeartRateScreen from '../heartRate/HeartRateScreen';
+import { Add } from 'iconsax-react-native';
 
 const TrackerScreen = () => {
   const [selectedScreen, setSelectedScreen] = useState('bloodPressure');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const isScreen = selectedScreen === 'bloodPressure';
-  
+
   // Animation values
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -59,34 +62,34 @@ const TrackerScreen = () => {
           useNativeDriver: true,
         }),
       ]),
-      
+
       // Phase 2: Đổi nội dung và animate tab indicator
       Animated.parallel([
         Animated.timing(tabIndicatorAnim, {
           toValue: key === 'bloodPressure' ? 0 : 1,
-          duration: 400,
+          duration: 550,
           easing: Easing.inOut(Easing.cubic),
           useNativeDriver: false, // Vì chúng ta dùng cho layout
         }),
       ]),
-      
+
       // Phase 3: Fade in và scale up nội dung mới
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 400,
+          duration: 550,
           easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }),
         Animated.timing(scaleAnim, {
           toValue: 1,
-          duration: 400,
+          duration: 550,
           easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }),
         Animated.timing(slideAnim, {
           toValue: 0,
-          duration: 400,
+          duration: 550,
           easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }),
@@ -130,7 +133,9 @@ const TrackerScreen = () => {
                 style={[
                   styles.nameScreen,
                   {
-                    color: isScreen ? appColors.primary : appColors.textSecondary,
+                    color: isScreen
+                      ? appColors.primary
+                      : appColors.textSecondary,
                   },
                 ]}
               />
@@ -167,7 +172,7 @@ const TrackerScreen = () => {
             </Animated.View>
           </TouchableOpacity>
         </RowComponent>
-        
+
         {/* Animated bottom bar */}
         <View style={styles.bottomBarContainer}>
           <Animated.View
@@ -198,21 +203,24 @@ const TrackerScreen = () => {
         <HeaderComponent title="Tracker" text="History" />
         <TabTopNavigation />
       </View>
-      
+
       {/* Content với animation mượt mà */}
       <Animated.View
         style={{
           flex: 1,
           opacity: fadeAnim,
-          transform: [
-            { scale: scaleAnim },
-            { translateX: slideAnim },
-          ],
+          transform: [{ scale: scaleAnim }, { translateX: slideAnim }],
         }}
       >
         {isScreen ? <BloodPeressureScreen /> : <HeartRateScreen />}
+        <ButtonComponent
+          onPress={() => console.log('Chuyển trang đo huyets app')}
+          style={styles.btnAdd}
+        >
+          <Add color={'#ffffff'} />
+        </ButtonComponent>
       </Animated.View>
-      
+
       {/* Loading overlay khi đang transition */}
       {isTransitioning && (
         <Animated.View
@@ -234,7 +242,10 @@ const TrackerScreen = () => {
 export default TrackerScreen;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    paddingBottom: 0,
+  },
   header: {
     backgroundColor: appColors.cardBg,
   },
@@ -281,5 +292,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.1)',
     zIndex: 999,
+  },
+  btnAdd: {
+    backgroundColor: appColors.primary,
+    position: 'absolute',
+    bottom: '3%',
+    width: 55,
+    height: 55,
+    borderRadius: 50,
+    right:'3%'
   },
 });

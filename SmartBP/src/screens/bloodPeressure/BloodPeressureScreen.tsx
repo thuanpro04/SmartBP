@@ -1,22 +1,24 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { appColors } from '../../utils/appColors';
+import { appSizes } from '../../utils/appSizes';
 import {
+  BloodPressureOverviewCard,
   ButtonComponent,
+  CustomDoubleBarChart,
   RowComponent,
   TextComponent,
 } from '../components/layout';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { appSizes } from '../../utils/appSizes';
-import { appColors } from '../../utils/appColors';
-const { height, width } = Dimensions.get('window');
+import CardBloodPressure from '../components/layout/CardBloodPressure';
 const BloodPeressureScreen = () => {
   const [selectedFeature, setSelectedFeature] = useState('Latest');
-  const dataUser = [
+  const bloodPressureData = [
     {
       title: 'Sytolic',
       unit: 'mmHg',
       value: 56,
-      color: appColors.Systolic,
+      color: appColors.systolic,
     },
     {
       title: 'Diastolic',
@@ -25,12 +27,33 @@ const BloodPeressureScreen = () => {
       color: appColors.diastolic,
     },
     {
-      title: 'Sytolic',
-      unit: 'BMP',
+      title: 'Pulse',
+      unit: 'bmp',
       value: 22,
       color: appColors.pulse,
     },
   ];
+  const chartData = [
+    {
+      date: '16/5',
+      systolic: 120,
+      diastolic: 80,
+      pulse: 72,
+    },
+    {
+      date: '20/5',
+      systolic: 115,
+      diastolic: 75,
+      pulse: 70,
+    },
+    {
+      date: '25/5',
+      systolic: 125,
+      diastolic: 85,
+      pulse: 74,
+    },
+  ];
+
   const onChangeFeature = () => {
     const arr = ['Latest', 'Older', 'Oldest'];
     const currentIndex = arr.indexOf(selectedFeature);
@@ -60,29 +83,18 @@ const BloodPeressureScreen = () => {
       </View>
     );
   };
-  const CardBody = () => {
-    return (
-      <View style={styles.cardBody}>
-        {dataUser.map((item, index) => (
-          <RowComponent style={styles.row} key={index}>
-            <View style={styles.labelGroup}>
-              <TextComponent label={item.title} style={styles.labelTitle} />
-              <TextComponent label={item.unit} style={styles.labelUnit} />
-            </View>
-            <TextComponent
-              label={item.value.toString()}
-              style={[styles.value, { color: item.color }]}
-            />
-          </RowComponent>
-        ))}
-      </View>
-    );
-  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <CardHeader />
-      <CardBody />
-    </View>
+      <BloodPressureOverviewCard data={bloodPressureData} />
+      <View style={styles.barContainer}>
+        <CustomDoubleBarChart data={chartData} />
+      </View>
+      {chartData.map((item, index) => (
+        <CardBloodPressure item={item} key={index} />
+      ))}
+    </ScrollView>
   );
 };
 
@@ -104,31 +116,7 @@ const styles = StyleSheet.create({
     color: appColors.title,
   },
   btn: { backgroundColor: 'transparent' },
-  cardBody: {
-    backgroundColor: appColors.cardBg,
-    marginVertical: 22,
-    padding: 16,
-    borderRadius: 22,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    elevation: 4,
-  },
-  row: {
-    paddingVertical: 6,
-  },
-  labelGroup: {
-    paddingVertical: 4,
-  },
-  labelTitle: {
-    fontWeight: '500',
-  },
-  labelUnit: {
-    color: appColors.textSecondary,
-    fontSize: appSizes.large,
-  },
-  value: {
-    fontSize: appSizes.xxxLarge,
-    fontWeight: 'bold',
+  barContainer: {
+    marginTop: 10,
   },
 });

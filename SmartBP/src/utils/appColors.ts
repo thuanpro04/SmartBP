@@ -11,7 +11,7 @@ export const appColors = {
   notification: '#FF4081',
   title: '#5f6064',
   diastolic: '#00C57E',
-  Systolic: '#F7B11E',
+  systolic: '#F7B11E',
   cardLearn: '#4DD904',
   cardBPNormal: '#FF36A4',
   cardWhoHighBP: '#FD3A3B',
@@ -20,4 +20,5 @@ export const appColors = {
   cardpPreventBP: '#FF9432',
   cardBg: '#FFFFFF',
   pulse: '#3f5fff',
+  iconDefault:'#000000'
 };
