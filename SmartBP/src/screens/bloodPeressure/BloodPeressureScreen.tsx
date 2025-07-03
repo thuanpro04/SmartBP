@@ -89,7 +89,12 @@ const BloodPeressureScreen = () => {
       <CardHeader />
       <BloodPressureOverviewCard data={bloodPressureData} />
       <View style={styles.barContainer}>
-        <CustomDoubleBarChart data={chartData} />
+        <CustomDoubleBarChart
+          data={chartData}
+          nameCol1="Systolic"
+          nameCol2="Diastolic"
+          titleChart="Biểu đồ huyết áp"
+        />
       </View>
       {chartData.map((item, index) => (
         <CardBloodPressure item={item} key={index} />

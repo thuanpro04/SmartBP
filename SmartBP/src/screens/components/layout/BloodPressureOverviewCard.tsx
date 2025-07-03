@@ -13,20 +13,23 @@ const BloodPressureOverviewCard = (props: Props) => {
   return (
     <View>
       <View style={styles.cardBody}>
-        {data.map((item: any, index: number) => (
-          <RowComponent style={styles.row} key={index}>
-            <View style={styles.labelGroup}>
-              <TextComponent label={item.title} style={styles.labelTitle} />
-              <TextComponent label={item.unit} style={styles.labelUnit} />
-            </View>
-            <TextComponent
-              label={item.value.toString()}
-              style={[styles.value, { color: item.color }]}
-            />
-          </RowComponent>
-        ))}
+        {data.map((item: any, index: number) => {
+          const colorValue =
+            item.value.toString() === '0' ? appColors.error : item.color;
+          return (
+            <RowComponent style={styles.row} key={index}>
+              <View style={styles.labelGroup}>
+                <TextComponent label={item.title} style={styles.labelTitle} />
+                <TextComponent label={item.unit} style={styles.labelUnit} />
+              </View>
+              <TextComponent
+                label={item.value.toString()}
+                style={[styles.value, { color: colorValue }]}
+              />
+            </RowComponent>
+          );
+        })}
       </View>
-      
     </View>
   );
 };
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: appSizes.xxxLarge,
     fontWeight: 'bold',
   },
-  
+
   barChart: {
     backgroundColor: appColors.cardBg,
     borderRadius: 12,

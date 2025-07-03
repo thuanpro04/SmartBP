@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 import { appSizes } from '../../../utils/appSizes';
@@ -16,14 +16,17 @@ interface Props {
   title: string;
   text?: string;
   style?: StyleProp<ViewStyle>;
+  onPress: () => void;
+  icon?: ReactNode;
 }
 const HeaderComponent = (props: Props) => {
-  const { title, text, style } = props;
+  const { title, text, style, onPress, icon } = props;
   return (
     <RowComponent style={[styles.container, style]}>
+      {icon && icon}
       <TextComponent label={title} style={styles.title} />
       {text && (
-        <TouchableOpacity onPress={() => console.log('History')}>
+        <TouchableOpacity onPress={onPress}>
           <TextComponent label={text} style={styles.text} />
         </TouchableOpacity>
       )}
@@ -41,6 +44,7 @@ const styles = StyleSheet.create({
     fontSize: appSizes.xxxLarge,
     fontWeight: 'bold',
     color: appColors.primary,
+    flex: 1,
   },
   text: {
     fontSize: appSizes.xLarge,

@@ -34,9 +34,9 @@ const ContainerComponent = (props: Props) => {
       ]}
     >
       <StatusBar
-        barStyle={'dark-content'}
-        translucent
-        backgroundColor={'transparent'}
+        barStyle={'light-content'}
+        translucent={false}
+        backgroundColor={appColors.primary}
       />
       {children}
     </SafeAreaProvider>
@@ -48,6 +48,6 @@ export default ContainerComponent;
 const localStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: appColors.background,
+    backgroundColor: appColors.primary,
   },
 });

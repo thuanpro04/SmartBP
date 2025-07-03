@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: appColors.cardBg,
     borderRadius: appSizes.radiusL,
     padding: 16,
-    marginVertical: 12,
+    marginTop: 22,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   barrier: {
     height: '100%',
     width: 10,
-    backgroundColor: appColors.diastolic,
+    backgroundColor: appColors.barrier,
     borderRadius: 12,
   },
   noteContainer: {

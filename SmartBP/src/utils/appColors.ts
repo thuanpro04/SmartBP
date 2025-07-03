@@ -20,5 +20,6 @@ export const appColors = {
   cardpPreventBP: '#FF9432',
   cardBg: '#FFFFFF',
   pulse: '#3f5fff',
-  iconDefault:'#000000'
+  iconDefault: '#000000',
+  barrier: '#00C57E',
 };

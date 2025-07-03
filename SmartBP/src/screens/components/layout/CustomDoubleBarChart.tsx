@@ -5,7 +5,15 @@ import { appColors } from '../../../utils/appColors';
 import { appSizes } from '../../../utils/appSizes';
 import RowComponent from './RowComponent';
 const { width } = Dimensions.get('window');
-const CustomDoubleBarChart = ({ data, maxValue = 200 }: any) => {
+interface Props {
+  data: any;
+  maxValue?: number;
+  titleChart: string;
+  nameCol1: string;
+  nameCol2: string;
+}
+const CustomDoubleBarChart = (props: Props) => {
+  const { data, maxValue = 200, nameCol1, nameCol2, titleChart } = props;
   const [widthScreen, setWidthScreen] = useState(width);
   const charWidth = width - 64;
   const chartHeight = 200;
@@ -52,7 +60,7 @@ const CustomDoubleBarChart = ({ data, maxValue = 200 }: any) => {
     return () => {
       subscription.remove();
     };
-  },[]);
+  }, []);
   const RenderBar = () => {
     return data.map((item: any, index: number) => {
       const systolicHeight = getBarHeight(item.systolic);
@@ -133,7 +141,7 @@ const CustomDoubleBarChart = ({ data, maxValue = 200 }: any) => {
   };
   return (
     <View style={styles.container}>
-      <TextComponent style={styles.chartTitle} label="Biểu đồ huyết áp" />
+      <TextComponent style={styles.chartTitle} label={titleChart} />
       <RowComponent style={styles.legendContainer}>
         <RowComponent style={styles.legendItem}>
           <View
@@ -142,7 +150,7 @@ const CustomDoubleBarChart = ({ data, maxValue = 200 }: any) => {
               { backgroundColor: appColors.systolic },
             ]}
           />
-          <TextComponent label="Systolic" style={styles.legendText} />
+          <TextComponent label={nameCol1} style={styles.legendText} />
         </RowComponent>
         <RowComponent style={styles.legendItem}>
           <View
@@ -151,7 +159,7 @@ const CustomDoubleBarChart = ({ data, maxValue = 200 }: any) => {
               { backgroundColor: appColors.diastolic },
             ]}
           />
-          <TextComponent label="Diastolic" style={styles.legendText} />
+          <TextComponent label={nameCol2} style={styles.legendText} />
         </RowComponent>
       </RowComponent>
       <RowComponent style={styles.chartContainer}>
