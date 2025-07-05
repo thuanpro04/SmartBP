@@ -21,8 +21,10 @@ import BloodPeressureScreen from '../bloodPeressure/BloodPeressureScreen';
 import HeartRateScreen from '../heartRate/HeartRateScreen';
 import { Add } from 'iconsax-react-native';
 import TabTopNavigation from '../navigation/TabTopNavigation';
+import AddModal from '../components/modal/AddModal';
 
 const TrackerScreen = ({ navigation }: any) => {
+  const [isAddModal, setIsAddModal] = useState(false);
   return (
     <ContainerComponent style={styles.container}>
       <View style={styles.header}>
@@ -42,11 +44,16 @@ const TrackerScreen = ({ navigation }: any) => {
       />
 
       <ButtonComponent
-        onPress={() => console.log('Chuyển trang đo huyets app')}
+        onPress={() => setIsAddModal(!isAddModal)}
         style={styles.btnAdd}
       >
         <Add color={'#ffffff'} />
       </ButtonComponent>
+      <AddModal
+        isVisible={isAddModal}
+        onClose={() => setIsAddModal(false)}
+        navigation={navigation}
+      />
     </ContainerComponent>
   );
 };
@@ -112,6 +119,6 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 50,
-    right: '3%',
+    right: '8%',
   },
 });

@@ -6,6 +6,7 @@ import ContainerComponent from './ContainerComponent';
 import CustomDoubleBarChart from './CustomDoubleBarChart';
 import HeaderComponent from './HeaderComponent';
 import RowComponent from './RowComponent';
+import SpacingComponent from './SpacingComponent';
 import TextComponent from './TextComponent';
 
 export {
@@ -18,4 +19,5 @@ export {
   CardBloodPressure,
   BloodPressureOverviewCard,
   CardInfoComponent,
+  SpacingComponent
 };

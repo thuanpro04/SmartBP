@@ -8,10 +8,11 @@ import {
   ButtonComponent,
   CustomDoubleBarChart,
   RowComponent,
+  SpacingComponent,
   TextComponent,
 } from '../components/layout';
 import CardBloodPressure from '../components/layout/CardBloodPressure';
-const BloodPeressureScreen = () => {
+const BloodPeressureScreen = ({ navigation }: any) => {
   const [selectedFeature, setSelectedFeature] = useState('Latest');
   const bloodPressureData = [
     {
@@ -97,8 +98,13 @@ const BloodPeressureScreen = () => {
         />
       </View>
       {chartData.map((item, index) => (
-        <CardBloodPressure item={item} key={index} />
+        <CardBloodPressure
+          item={item}
+          key={index}
+          onNavigation={() => navigation.navigate('record')}
+        />
       ))}
+      <SpacingComponent height={32} />
     </ScrollView>
   );
 };

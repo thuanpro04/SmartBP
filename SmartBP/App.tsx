@@ -7,13 +7,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Host } from 'react-native-portalize';
+
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <SafeAreaProvider>
-          <AppRouter />
-        </SafeAreaProvider>
+        <Host>
+          <SafeAreaProvider>
+            <AppRouter />
+          </SafeAreaProvider>
+        </Host>
       </NavigationContainer>
     </GestureHandlerRootView>
   );

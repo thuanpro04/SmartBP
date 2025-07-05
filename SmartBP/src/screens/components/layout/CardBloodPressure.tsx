@@ -6,7 +6,8 @@ import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 import { Edit, Edit2 } from 'iconsax-react-native';
 import MarqueeText from './MarqueeText';
-const CardBloodPressure = ({ item }: any) => {
+import ButtonComponent from './ButtonComponent';
+const CardBloodPressure = ({ item, onNavigation }: any) => {
   return (
     <RowComponent style={styles.container}>
       <View style={styles.valueContainer}>
@@ -26,7 +27,9 @@ const CardBloodPressure = ({ item }: any) => {
         <TextComponent label="Pulse: 20 BPM" style={styles.date} />
       </View>
 
-      <Edit2 color={appColors.iconDefault} size={appSizes.iconS} />
+      <ButtonComponent onPress={onNavigation}>
+        <Edit2 color={appColors.iconDefault} size={appSizes.iconS} />
+      </ButtonComponent>
     </RowComponent>
   );
 };
