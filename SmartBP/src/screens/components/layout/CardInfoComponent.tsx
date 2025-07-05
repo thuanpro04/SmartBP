@@ -14,8 +14,14 @@ import { appSizes } from '../../../utils/appSizes';
 import ButtonComponent from './ButtonComponent';
 import { appColors } from '../../../utils/appColors';
 import TextComponent from './TextComponent';
-
-const CardInfoComponent = () => {
+interface Props {
+  navigation: any;
+}
+const CardInfoComponent = (props: Props) => {
+  const { navigation } = props;
+  const onNavigation = (screen: string) => {
+    navigation.navigate(screen);
+  };
   const renderItems = ({ item, index }: any) => {
     return (
       <View
@@ -25,7 +31,7 @@ const CardInfoComponent = () => {
           <View style={styles.btnContainer}>
             <ButtonComponent
               style={[styles.btnRight]}
-              onPress={() => console.log('hello')}
+              onPress={() => onNavigation(item.screen)}
             >
               <Entypo
                 name="chevron-right"
@@ -92,11 +98,11 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     overflow: 'hidden',
     borderRadius: 12,
-    shadowColor:'#000',
-    shadowOffset:{width:0,height:2},
-    shadowOpacity:0.2,
-    shadowRadius:12,
-    elevation:2
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 2,
   },
   btnRight: {
     backgroundColor: appColors.cardBg,

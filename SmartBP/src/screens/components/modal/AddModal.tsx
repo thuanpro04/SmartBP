@@ -29,9 +29,9 @@ const AddModal = (props: Props) => {
     modalRef.current?.close();
     onClose();
   };
-  const onNavigationRecord = () => {
+  const onNavigationMeasure = () => {
     handleClose();
-    navigation.navigate('record');
+    navigation.navigate('measure');
   };
   const onNavigationHeartRate = () => {
     handleClose();
@@ -57,7 +57,7 @@ const AddModal = (props: Props) => {
             </ButtonComponent>
           </RowComponent>
           <ButtonComponent
-            onPress={onNavigationRecord}
+            onPress={onNavigationMeasure}
             style={[styles.btn, { backgroundColor: appColors.primary }]}
           >
             <RowComponent style={{}}>

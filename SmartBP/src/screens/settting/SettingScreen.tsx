@@ -13,28 +13,48 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { appSizes } from '../../utils/appSizes';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-const SettingScreen = () => {
+const SettingScreen = ({ navigation }: any) => {
+  const onPress = (key: string) => {
+    switch (key) {
+      case 'language':
+        navigation.navigate('language')
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <ContainerComponent style={{ paddingBottom: 0 }}>
       <HeaderComponent title="Settings" style={styles.header} />
       <View style={styles.main}>
         <View style={styles.card}>
-          <RowComponent style={styles.row}>
-            <FontAwesome
-              name="language"
-              size={appSizes.iconM}
-              color={appColors.primary}
-            />
-            <TextComponent label="Language Options" />
-          </RowComponent>
-          <RowComponent style={styles.row}>
-            <Fontisto
-              name="export"
-              size={appSizes.iconM}
-              color={appColors.primary}
-            />
-            <TextComponent label="Export as file" />
-          </RowComponent>
+          <ButtonComponent
+            onPress={() => onPress('language')}
+            style={styles.btnCard}
+          >
+            <RowComponent style={styles.row}>
+              <FontAwesome
+                name="language"
+                size={appSizes.iconM}
+                color={appColors.primary}
+              />
+              <TextComponent label="Language Options" />
+            </RowComponent>
+          </ButtonComponent>
+          <ButtonComponent
+            onPress={() => onPress('export')}
+            style={styles.btnCard}
+          >
+            <RowComponent style={styles.row}>
+              <Fontisto
+                name="export"
+                size={appSizes.iconM}
+                color={appColors.primary}
+              />
+              <TextComponent label="Export as file" />
+            </RowComponent>
+          </ButtonComponent>
         </View>
 
         <View style={styles.card}>
@@ -102,4 +122,5 @@ const styles = StyleSheet.create({
   btnCard: {
     backgroundColor: 'transparent',
   },
+  btn: {},
 });
