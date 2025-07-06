@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { appColors } from '../../utils/appColors';
 import {
@@ -13,15 +13,65 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { appSizes } from '../../utils/appSizes';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ExportNotifiModal from '../components/modal/ExportNotifiModal';
+import { useExcelExport } from '../hook/useExcelExport';
 const SettingScreen = ({ navigation }: any) => {
+  const [isExportModal, setIsExportModal] = useState(false);
+  const { exportData, isExporting } = useExcelExport();
   const onPress = (key: string) => {
     switch (key) {
       case 'language':
-        navigation.navigate('language')
+        navigation.navigate('language');
         break;
-
+      case 'export':
+        onOpenModal();
+        break;
+      case 'star':
+        navigation.navigate('star');
+        break;
+      case 'feedback':
+        navigation.navigate('feedback');
+        break;
       default:
+        navigation.navigate('share');
         break;
+    }
+  };
+  function onOpenModal() {
+    setIsExportModal(true);
+  }
+  function onCloseModal() {
+    setIsExportModal(false);
+  }
+  const sampleData = [
+    { id: 1, name: 'Nguyễn Văn A', age: 25, city: 'Hà Nội' },
+    { id: 2, name: 'Trần Thị B', age: 30, city: 'TP.HCM' },
+    { id: 3, name: 'Lê Văn C', age: 28, city: 'Đà Nẵng' },
+  ];
+
+  const handleExport = async () => {
+    const result = await exportData(sampleData, 'danh_sach_nguoi_dung');
+
+    if (result.success) {
+      Alert.alert('Thành công', 'Đã xuất file Excel thành công!');
+      onCloseModal();
+    }
+  };
+  // Xuất với tùy chỉnh nâng cao
+  const handleAdvancedExport = async () => {
+    const options = {
+      fileName: 'bao_cao_chi_tiet',
+      sheetName: 'Danh sách người dùng',
+      headers: ['ID', 'Họ tên', 'Tuổi', 'Thành phố'],
+      columnWidths: [10, 25, 10, 20],
+      advanced: true,
+    };
+
+    const result = await exportData(sampleData, 'bao_cao_chi_tiet', options);
+
+    if (result.success) {
+      Alert.alert('Thành công', 'Đã xuất file Excel thành công!');
+      onCloseModal();
     }
   };
   return (
@@ -58,7 +108,10 @@ const SettingScreen = ({ navigation }: any) => {
         </View>
 
         <View style={styles.card}>
-          <ButtonComponent onPress={() => {}} style={styles.btnCard}>
+          <ButtonComponent
+            onPress={() => onPress('star')}
+            style={styles.btnCard}
+          >
             <RowComponent style={styles.row}>
               <FontAwesome
                 name="star"
@@ -68,7 +121,10 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Rate Us" />
             </RowComponent>
           </ButtonComponent>
-          <ButtonComponent onPress={() => {}} style={styles.btnCard}>
+          <ButtonComponent
+            onPress={() => onPress('share')}
+            style={styles.btnCard}
+          >
             <RowComponent style={styles.row}>
               <Fontisto
                 name="share"
@@ -78,7 +134,10 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Share with Friends" />
             </RowComponent>
           </ButtonComponent>
-          <ButtonComponent onPress={() => {}} style={styles.btnCard}>
+          <ButtonComponent
+            onPress={() => onPress('feedback')}
+            style={styles.btnCard}
+          >
             <RowComponent style={styles.row}>
               <MaterialIcons
                 name="feedback"
@@ -90,6 +149,12 @@ const SettingScreen = ({ navigation }: any) => {
           </ButtonComponent>
         </View>
       </View>
+      <ExportNotifiModal
+        isVisible={isExportModal}
+        onClose={onCloseModal}
+        onConfirm={handleExport}
+        isLoading={isExporting}
+      />
     </ContainerComponent>
   );
 };

@@ -1,239 +1,243 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-} from 'react-native';
-import React, { useState, useEffect, useRef } from 'react';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import {
   ButtonComponent,
   ContainerComponent,
-  HeaderComponent,
   RowComponent,
   TextComponent,
 } from '../components/layout';
 import { appColors } from '../../utils/appColors';
 import { appSizes } from '../../utils/appSizes';
-import { Add } from 'iconsax-react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-const { height, width } = Dimensions.get('window');
-
+import { ArrowLeft2 } from 'iconsax-react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { LineChart } from 'react-native-chart-kit';
+const { width, height } = Dimensions.get('window');
 const MeasureGuideScreen = ({ navigation }: any) => {
-  const [start, setStart] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [percentage, setPercentage] = useState(0);
-
-  // Animation refs for heartbeat lines
-  const leftLineAnim = useRef(new Animated.Value(0)).current;
-  const rightLineAnim = useRef(new Animated.Value(0)).current;
-
-  // Create heartbeat wave animation
-  const createHeartbeatWave = (
-    animValue: Animated.Value,
-    delay: number = 0,
-  ) => {
-    return Animated.loop(
-      Animated.sequence([
-        Animated.delay(delay),
-        // Đường thẳng ban đầu
-        Animated.timing(animValue, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        // Đỉnh nhọn đầu tiên (nhỏ)
-        Animated.timing(animValue, {
-          toValue: 30,
-          duration: 50,
-          useNativeDriver: false,
-        }),
-        Animated.timing(animValue, {
-          toValue: -20,
-          duration: 30,
-          useNativeDriver: false,
-        }),
-        // Đỉnh chính (cao nhất)
-        Animated.timing(animValue, {
-          toValue: 80,
-          duration: 40,
-          useNativeDriver: false,
-        }),
-        Animated.timing(animValue, {
-          toValue: -60,
-          duration: 40,
-          useNativeDriver: false,
-        }),
-        // Đỉnh thứ ba (trung bình)
-        Animated.timing(animValue, {
-          toValue: 40,
-          duration: 35,
-          useNativeDriver: false,
-        }),
-        // Về đường thẳng
-        Animated.timing(animValue, {
-          toValue: 0,
-          duration: 45,
-          useNativeDriver: false,
-        }),
-        // Nghỉ giữa các nhịp
-        Animated.delay(400),
-      ]),
-    );
+  const [isConnected, setIsConnected] = useState(false);
+  const [isMeasuring, setIsMeasuring] = useState(false);
+  const [measurementHistory, setMeasurementHistory] = useState<any[]>([]);
+  const [bloodPressure, setBloodPressure] = useState({
+    systolic: 0,
+    diastolic: 0,
+  });
+  const [heartRate, setHeartRate] = useState(0);
+  const [chartData, setChartData] = useState({
+    labels: ['6h', '8h', '10h', '12h', '14h', '16h'],
+    datasets: [
+      {
+        data: [120, 125, 118, 122, 119, 124],
+        color: (opacity = 1) => `rgba(244, 67, 54, ${opacity})`, // Màu đỏ cho tâm thu
+        strokeWidth: 2,
+      },
+      {
+        data: [80, 82, 78, 81, 79, 83],
+        color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`, // Màu xanh cho tâm trương
+        strokeWidth: 2,
+      },
+    ],
+  });
+  const getBloodPressureStatus = (systolic: number, diastolic: number) => {
+    if (systolic < 120 && diastolic < 80)
+      return { text: 'Bình thường', color: '#4CAF50' };
+    if (systolic < 130 && diastolic < 80)
+      return { text: 'Hơi cao', color: '#FF9800' };
+    if (systolic < 140 || diastolic < 90)
+      return { text: 'Cao độ 1', color: '#FF5722' };
+    return { text: 'Cao độ 2', color: '#F44336' };
   };
-
-  useEffect(() => {
-    if (start) {
-      // Start heartbeat wave animations với delay khác nhau
-      createHeartbeatWave(leftLineAnim, 0).start();
-      createHeartbeatWave(rightLineAnim, 200).start(); // Delay 200ms cho hiệu ứng
-
-      // Start percentage counter
-      const interval = setInterval(() => {
-        setPercentage(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          return prev + 1;
-        });
-      }, 50);
-
-      return () => {
-        clearInterval(interval);
+  const bpStatus = getBloodPressureStatus(
+    bloodPressure.systolic,
+    bloodPressure.diastolic,
+  );
+  const handleConnect = () => {
+    setIsConnected(!isConnected);
+  };
+  const handleMeasure = () => {
+    setIsMeasuring(true);
+    setTimeout(() => {
+      const systolic = Math.floor(Math.random() * (140 - 110) + 110);
+      const diastolic = Math.floor(Math.random() * (90 - 70) + 70);
+      const hr = Math.floor(Math.random() * (100 - 60) + 60);
+      setBloodPressure({ systolic, diastolic });
+      setHeartRate(hr);
+      // Thêm vào lịch sử
+      const newMeasurement = {
+        id: Date.now(),
+        systolic,
+        diastolic,
+        heartRate: hr,
+        timestamp: new Date().toLocaleTimeString('vi-VN', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       };
-    }
-  }, [start]);
 
-  const onStartMeasure = () => {
-    setStart(true);
-    setPercentage(1);
+      setMeasurementHistory(prev => [newMeasurement, ...prev.slice(0, 4)]);
+      setIsMeasuring(false);
+    }, 3000);
   };
-
-  // Create heartbeat line component
-  const HeartbeatLine = ({
-    animValue,
-    isLeft,
-  }: {
-    animValue: Animated.Value;
-    isLeft: boolean;
-  }) => {
-    const lineHeight = animValue.interpolate({
-      inputRange: [-60, 0, 80],
-      outputRange: [1, 3, 8],
-      extrapolate: 'clamp',
-    });
-
-    const lineOpacity = animValue.interpolate({
-      inputRange: [-60, 0, 80],
-      outputRange: [0.8, 0.6, 1],
-      extrapolate: 'clamp',
-    });
-
-    const lineColor = animValue.interpolate({
-      inputRange: [-60, 0, 80],
-      outputRange: [
-        'rgba(255, 69, 69, 0.8)',
-        'rgba(255, 69, 69, 0.6)',
-        'rgba(255, 69, 69, 1)',
-      ],
-      extrapolate: 'clamp',
-    });
-
-    return (
-      <View
-        style={[
-          styles.heartbeatContainer,
-          isLeft ? styles.leftLine : styles.rightLine,
-        ]}
-      >
-        {/* Tạo nhiều đường để mô phỏng sóng heartbeat */}
-        {[...Array(20)].map((_, index) => (
-          <Animated.View
-            key={index}
-            style={[
-              styles.heartbeatSegment,
-              {
-                height: lineHeight,
-                opacity: lineOpacity,
-                backgroundColor: lineColor,
-                marginLeft: index * 2,
-              },
-            ]}
-          />
-        ))}
-      </View>
-    );
-  };
-
   return (
-    <ContainerComponent>
-      <HeaderComponent
-        title="Measure Guide"
-        onPress={() => navigation.goBack()}
-        text="Cancel"
-        style={styles.header}
-      />
-      <View style={styles.main}>
-        <View style={styles.heart}>
-          <RowComponent>
-            <View style={[styles.roundHeart, { marginRight: -24 }]}>
-              {start && (
-                <HeartbeatLine animValue={leftLineAnim} isLeft={true} />
-              )}
-            </View>
-            <Image
-              source={require('../../assets/images/heart.png')}
-              style={styles.image}
-            />
-            <View style={[styles.roundHeart, { marginLeft: -24 }]}>
-              {start && (
-                <HeartbeatLine animValue={rightLineAnim} isLeft={false} />
-              )}
-            </View>
-          </RowComponent>
-          <ButtonComponent style={styles.btnStart} onPress={onStartMeasure}>
-            {start ? (
-              <TextComponent label={`${percentage}%`} style={styles.percent} />
-            ) : (
-              <>
-                <TextComponent label="START" style={styles.titleBtn} />
-                <TextComponent
-                  label="Tab to measure"
-                  style={styles.description}
-                />
-              </>
-            )}
-          </ButtonComponent>
-        </View>
-        {!start ? (
-          <ButtonComponent
-            onPress={() => navigation.navigate('record')}
-            style={styles.btnAdd}
-          >
-            <RowComponent>
-              <Add size={appSizes.iconM} color={appColors.pulse} />
-              <TextComponent label="Add Manually" style={styles.labelBtn} />
-            </RowComponent>
-          </ButtonComponent>
-        ) : (
-          <View style={{ alignItems: 'center' }}>
-            <RowComponent style={{ gap: 0 }}>
-              <TextComponent
-                label="0"
-                style={[styles.value, { opacity: 0.3 }]}
+    <ContainerComponent style={styles.container}>
+      <ScrollView style={styles.scroll}>
+        <View style={styles.header}>
+          <RowComponent style={styles.headerRow}>
+            <ButtonComponent
+              onPress={() => navigation.goBack()}
+              style={{ backgroundColor: 'transparent' }}
+            >
+              <Entypo
+                name="chevron-left"
+                size={appSizes.iconL}
+                color={appColors.cardBg}
               />
-              <TextComponent label="00" style={styles.value} />
-            </RowComponent>
+            </ButtonComponent>
             <TextComponent
-              label="Beat per minute"
-              style={{ fontStyle: 'italic', fontWeight: '200' }}
+              label="Đo Huyết Áp & Nhịp Tim"
+              style={styles.headerTitle}
+            />
+          </RowComponent>
+          <TextComponent
+            label="Theo dỗi sức khỏe tim mạch"
+            style={styles.headerSubtitle}
+          />
+        </View>
+        {/* Trạng thái kết nối */}
+        <RowComponent style={styles.connectionCard}>
+          <RowComponent>
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: isConnected ? '#4CAF50' : '#F44336' },
+              ]}
+            />
+            <TextComponent
+              style={styles.connectionText}
+              label={
+                isConnected ? 'Đã kết nối thiết bị' : 'Chưa kết nối thiết bị'
+              }
+            />
+          </RowComponent>
+          <ButtonComponent style={styles.connectButton} onPress={handleConnect}>
+            <TextComponent
+              label={isConnected ? 'Ngắt kết nối' : 'Kết nối'}
+              style={styles.connectButtonText}
+            />
+          </ButtonComponent>
+        </RowComponent>
+        {/* Thông số hiện tại */}
+        <RowComponent style={styles.metricsContainer}>
+          <View style={styles.metricCard}>
+            <TextComponent label="Huyết áp" style={styles.metricLabel} />
+            <TextComponent
+              label={` ${bloodPressure.systolic}/${bloodPressure.diastolic}`}
+              style={styles.metricValue}
+            />
+            <TextComponent label="mmHg" style={styles.metricUnit} />
+            <TextComponent
+              label={bpStatus.text}
+              style={[styles.metricStatus, { color: bpStatus.color }]}
             />
           </View>
-        )}
-      </View>
+          <View style={styles.metricCard}>
+            <TextComponent style={styles.metricLabel} label="Nhịp tim" />
+            <TextComponent
+              style={styles.metricValue}
+              label={heartRate.toString()}
+            />
+            <TextComponent label="BPM" style={styles.metricUnit} />
+            <TextComponent
+              label={heartRate > 0 ? 'Bình thường' : 'Chưa đo'}
+              style={[
+                styles.metricStatus,
+                { color: heartRate > 0 ? '#4CAF50' : '#999' },
+              ]}
+            />
+          </View>
+        </RowComponent>
+        <ButtonComponent
+          style={[
+            styles.measureButton,
+            { opacity: isConnected && !isMeasuring ? 1 : 0.5 },
+          ]}
+          onPress={handleMeasure}
+          disabled={!isConnected || isMeasuring}
+        >
+          <TextComponent
+            label={isMeasuring ? 'Đang đo...' : 'Bắt đầu đo'}
+            style={styles.measureButtonText}
+          />
+        </ButtonComponent>
+        {/* Biểu đồ */}
+        <View style={styles.chartContainer}>
+          <TextComponent
+            label="Biểu đồ huyết áp trong ngày"
+            style={styles.chartTitle}
+          />
+          <LineChart
+            data={chartData}
+            width={width - 40}
+            height={220}
+            chartConfig={{
+              backgroundColor: appColors.cardBg,
+              backgroundGradientFrom: appColors.cardBg,
+              backgroundGradientTo: appColors.cardBg,
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: '4',
+                strokeWidth: '2',
+              },
+            }}
+            bezier
+            style={styles.chart}
+          />
+          <RowComponent style={styles.chartLegend}>
+            <RowComponent style={styles.legendItem}>
+              <View
+                style={[styles.legendDot, { backgroundColor: '#F44336' }]}
+              />
+              <TextComponent style={styles.legendText} label="Tâm thu" />
+            </RowComponent>
+            <RowComponent style={styles.legendItem}>
+              <View
+                style={[styles.legendDot, { backgroundColor: '#2196F3' }]}
+              />
+              <TextComponent label="Tâm trương" style={styles.legendText} />
+            </RowComponent>
+          </RowComponent>
+        </View>
+        {/* Lịch sử đo */}
+        <View style={styles.historyContainer}>
+          <Text style={styles.historyTitle}>Lịch sử đo gần đây</Text>
+          {measurementHistory.length > 0 ? (
+            measurementHistory.map(item => (
+              <RowComponent key={item.id} style={styles.historyItem}>
+                <TextComponent
+                  label={item.timestamp}
+                  style={styles.historyTime}
+                />
+                <TextComponent
+                  label={`${item.systolic}/${item.diastolic} mmHg`}
+                  style={styles.historyValue}
+                />
+                <TextComponent
+                  label={`${item.heartRate} BPM`}
+                  style={styles.historyHeartRate}
+                ></TextComponent>
+              </RowComponent>
+            ))
+          ) : (
+            <TextComponent
+              label="Chưa có dữ liệu đo"
+              style={styles.noHistoryText}
+            />
+          )}
+        </View>
+      </ScrollView>
     </ContainerComponent>
   );
 };
@@ -241,84 +245,200 @@ const MeasureGuideScreen = ({ navigation }: any) => {
 export default MeasureGuideScreen;
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomColor: appColors.border,
-    borderBottomWidth: 1,
+  container: {
+    paddingBottom: 0,
   },
-  main: {
+  scroll: {
     flex: 1,
     backgroundColor: appColors.background,
-    padding: 16,
   },
-  heart: {
-    alignItems: 'center',
+  header: {
+    backgroundColor: appColors.primary,
+    padding: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
-  image: {
-    width: 250,
-    height: 250,
+  headerRow: {
+    gap: 0,
   },
-  roundHeart: {
-    height: 3,
-    backgroundColor: appColors.error,
-    width: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  heartbeatContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 20,
-    width: '100%',
-  },
-  leftLine: {
-    justifyContent: 'flex-end',
-  },
-  rightLine: {
-    justifyContent: 'flex-start',
-  },
-  heartbeatSegment: {
-    width: 2,
-    backgroundColor: appColors.error,
-    marginHorizontal: 0.5,
-  },
-  btnStart: {
-    position: 'absolute',
-    bottom: '45%',
-  },
-  titleBtn: {
+  headerTitle: {
+    color: appColors.cardBg,
     fontWeight: 'bold',
-    color: appColors.cardBg,
-    fontSize: appSizes.xxxLarge,
-    marginLeft: 8,
-  },
-  description: {
-    fontSize: appSizes.large,
-    color: appColors.cardBg,
-  },
-  btnAdd: {
-    borderWidth: 1,
-    borderColor: appColors.disabled,
-    borderRadius: 50,
-    backgroundColor: appColors.cardBg,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  labelBtn: {
-    flex: 1,
     textAlign: 'center',
-    color: appColors.primary,
-    fontWeight: '500',
+    fontSize: appSizes.xxLarge,
+    flex: 1,
   },
-  percent: {
-    fontWeight: '900',
+  headerSubtitle: {
+    fontSize: appSizes.medium,
     color: appColors.cardBg,
-    fontSize: appSizes.xxxLarge,
+    textAlign: 'center',
+    marginTop: 5,
+    opacity: 0.9,
   },
-  value: {
-    fontWeight: '900',
-    fontSize: 90,
-    color: appColors.error,
+  connectionCard: {
+    backgroundColor: appColors.cardBg,
+    margin: 20,
+    padding: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statusDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 10,
+  },
+  connectionText: {
+    fontSize: appSizes.large,
+    color: '#333',
+  },
+  connectButton: {
+    backgroundColor: appColors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  connectButtonText: {
+    color: appColors.cardBg,
+    fontSize: appSizes.medium,
+    fontWeight: '600',
+  },
+  metricsContainer: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  metricCard: {
+    flex: 1,
+    backgroundColor: appColors.cardBg,
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    paddingVertical: 6,
+  },
+  metricLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
+  metricValue: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  metricUnit: {
+    fontSize: 12,
+    color: '#999',
+    marginBottom: 10,
+  },
+  measureButton: {
+    backgroundColor: '#4CAF50',
+    marginHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  measureButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  metricStatus: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  chartContainer: {
+    backgroundColor: appColors.cardBg,
+    margin: 20,
+    padding: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
+  chartTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  chart: {
+    borderRadius: 16,
+  },
+  chartLegend: {
+    marginTop: 15,
+  },
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  legendText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  legendItem: {
+    gap: 0,
+  },
+  historyContainer: {
+    backgroundColor: '#ffffff',
+    margin: 20,
+    padding: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  historyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 15,
+  },
+  historyItem: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  historyTime: {
+    fontSize: 14,
+    color: '#666',
+    width: 60,
+  },
+  historyValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    flex: 1,
+    marginLeft: 15,
+  },
+  historyHeartRate: {
+    fontSize: 14,
+    color: '#2196F3',
+    fontWeight: '600',
+  },
+  noHistoryText: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 14,
+    fontStyle: 'italic',
+    paddingVertical: 20,
   },
 });
