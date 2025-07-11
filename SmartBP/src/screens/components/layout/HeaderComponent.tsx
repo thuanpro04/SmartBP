@@ -26,9 +26,9 @@ const HeaderComponent = (props: Props) => {
       {icon && icon}
       <TextComponent label={title} style={styles.title} />
       {text && (
-        <TouchableOpacity onPress={onPress}>
+        <ButtonComponent onPress={onPress} style={styles.btn}>
           <TextComponent label={text} style={styles.text} />
-        </TouchableOpacity>
+        </ButtonComponent>
       )}
     </RowComponent>
   );
@@ -39,7 +39,7 @@ export default HeaderComponent;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 22,
     backgroundColor: appColors.cardBg,
   },
   title: {
@@ -51,5 +51,10 @@ const styles = StyleSheet.create({
   text: {
     fontSize: appSizes.xLarge,
     color: appColors.textPrimary,
+    fontStyle:'italic',
+    fontWeight:'300',
   },
+  btn:{
+
+  }
 });

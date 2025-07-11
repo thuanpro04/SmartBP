@@ -254,9 +254,10 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: appColors.primary,
-    padding: 20,
+    paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    paddingBottom: 20,
   },
   headerRow: {
     gap: 0,
@@ -272,7 +273,6 @@ const styles = StyleSheet.create({
     fontSize: appSizes.medium,
     color: appColors.cardBg,
     textAlign: 'center',
-    marginTop: 5,
     opacity: 0.9,
   },
   connectionCard: {

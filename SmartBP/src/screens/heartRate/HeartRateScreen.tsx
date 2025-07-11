@@ -10,19 +10,19 @@ import { appColors } from '../../utils/appColors';
 const HeartRateScreen = () => {
   const heartRateData = [
     {
-      title: 'Average',
+      title: 'Trung bình',
       unit: 'BMP',
       value: 0,
       color: appColors.systolic,
     },
     {
-      title: 'Max',
+      title: 'Lớn nhất',
       unit: 'BPM',
       value: 0,
       color: appColors.diastolic,
     },
     {
-      title: 'Min',
+      title: 'Nhỏ nhất',
       unit: 'BMP',
       value: 0,
       color: appColors.pulse,
@@ -31,8 +31,7 @@ const HeartRateScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <BloodPressureOverviewCard data={heartRateData} />
-      
-        <CustomDoubleBarChart data={[]} nameCol1='Max' nameCol2='Min' titleChart='Biểu đồ nhịp tim' />
+        <CustomDoubleBarChart data={[]} nameCol1='Lớn nhất' nameCol2='Nhỏ nhất' titleChart='Biểu đồ nhịp tim' />
     </ScrollView>
   );
 };

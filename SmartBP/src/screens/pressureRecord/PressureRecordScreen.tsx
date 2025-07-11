@@ -1,29 +1,22 @@
+import { Add } from 'iconsax-react-native';
+import React, { useState } from 'react';
 import {
   Dimensions,
   ScrollView,
   StyleSheet,
   Text,
-  View,
-  Animated,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import {
-  ButtonComponent,
-  ContainerComponent,
-  HeaderComponent,
-  RowComponent,
-  SpacingComponent,
-  TextComponent,
-} from '../components/layout';
-import { appColors } from '../../utils/appColors';
-import { Image } from 'react-native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { appSizes } from '../../utils/appSizes';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { Add } from 'iconsax-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { appColors } from '../../utils/appColors';
+import {
+  ContainerComponent,
+  HeaderComponent,
+  SpacingComponent,
+} from '../components/layout';
 
 const { height, width } = Dimensions.get('window');
 
@@ -38,14 +31,34 @@ const PressureRecordScreen = ({ navigation }: any) => {
   // Handlers cho scroll
   // Hàm xác định trạng thái huyết áp
   const getBloodPressureStatus = () => {
-    if (selectedSystolic < 120 && selectedDiastolic < 80) {
-      return { status: 'Normal', color: '#22C55E', bgColor: '#DCFCE7' };
+    if (selectedSystolic < 90 || selectedDiastolic < 60) {
+      return { status: 'Huyết áp thấp', color: '#3B82F6', bgColor: '#DBEAFE' };
+    } else if (selectedSystolic < 120 && selectedDiastolic < 80) {
+      return { status: 'Bình thường', color: '#22C55E', bgColor: '#DCFCE7' };
     } else if (selectedSystolic < 130 && selectedDiastolic < 80) {
-      return { status: 'Elevated', color: '#F59E0B', bgColor: '#FEF3C7' };
+      return {
+        status: 'Tiền tăng huyết áp',
+        color: '#FACC15',
+        bgColor: '#FEF9C3',
+      };
     } else if (selectedSystolic < 140 || selectedDiastolic < 90) {
-      return { status: 'High Stage 1', color: '#EF4444', bgColor: '#FEE2E2' };
+      return {
+        status: 'Tăng huyết áp độ 1',
+        color: '#F97316',
+        bgColor: '#FFEDD5',
+      };
+    } else if (selectedSystolic < 180 || selectedDiastolic < 120) {
+      return {
+        status: 'Tăng huyết áp độ 2',
+        color: '#EF4444',
+        bgColor: '#FEE2E2',
+      };
     } else {
-      return { status: 'High Stage 2', color: '#DC2626', bgColor: '#FEE2E2' };
+      return {
+        status: 'Cơn tăng huyết áp nguy hiểm',
+        color: '#B91C1C',
+        bgColor: '#FECACA',
+      };
     }
   };
   const NumberPicker = ({
@@ -91,9 +104,10 @@ const PressureRecordScreen = ({ navigation }: any) => {
   return (
     <ContainerComponent>
       <HeaderComponent
-        title="Pressure Record"
-        text="Cancel"
+        title="	Ghi huyết áp"
+        text="Quay lại"
         onPress={() => navigation.goBack()}
+        
       />
 
       <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
@@ -124,19 +138,19 @@ const PressureRecordScreen = ({ navigation }: any) => {
 
         {/* Measurement Section */}
         <View style={styles.measurementSection}>
-          <Text style={styles.sectionTitle}>Current Reading</Text>
+          <Text style={styles.sectionTitle}>Chỉ số hiện tại</Text>
 
           <View style={styles.readingDisplay}>
             <View style={styles.readingCard}>
               <Text style={styles.readingValue}>{selectedSystolic}</Text>
-              <Text style={styles.readingLabel}>SYS</Text>
+              <Text style={styles.readingLabel}>Tâm thu</Text>
             </View>
             <View style={styles.separator}>
               <Text style={styles.separatorText}>/</Text>
             </View>
             <View style={styles.readingCard}>
               <Text style={styles.readingValue}>{selectedDiastolic}</Text>
-              <Text style={styles.readingLabel}>DIA</Text>
+              <Text style={styles.readingLabel}>Tâm trương</Text>
             </View>
             <View style={styles.pulseCard}>
               <MaterialIcons
@@ -153,7 +167,7 @@ const PressureRecordScreen = ({ navigation }: any) => {
         {/* Scroll Pickers */}
         {/* Number Pickers */}
         <View style={styles.pickersCard}>
-          <Text style={styles.cardTitle}>Adjust Values</Text>
+          <Text style={styles.cardTitle}>Điều chỉnh chỉ số</Text>
 
           <View style={styles.pickersContainer}>
             <NumberPicker
@@ -163,7 +177,7 @@ const PressureRecordScreen = ({ navigation }: any) => {
               max={200}
               step={1}
               unit="mmHg"
-              label="Systolic"
+              label="Tâm thu"
             />
 
             <NumberPicker
@@ -173,7 +187,7 @@ const PressureRecordScreen = ({ navigation }: any) => {
               max={120}
               step={1}
               unit="mmHg"
-              label="Diastolic"
+              label="Tâm trương"
             />
 
             <NumberPicker
@@ -183,16 +197,16 @@ const PressureRecordScreen = ({ navigation }: any) => {
               max={200}
               step={1}
               unit="BPM"
-              label="Pulse"
+              label="Nhịp tim"
             />
           </View>
         </View>
         {/* Date & Time Section */}
         <View style={styles.dateTimeSection}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Date & Time</Text>
+            <Text style={styles.sectionTitle}>Ngày & Giờ</Text>
             <TouchableOpacity style={styles.noteButton}>
-              <Text style={styles.noteText}>Add Note</Text>
+              <Text style={styles.noteText}>Ngày & Giờ</Text>
               <Add size={16} color={appColors.primary} />
             </TouchableOpacity>
           </View>
@@ -200,7 +214,7 @@ const PressureRecordScreen = ({ navigation }: any) => {
           <View style={styles.dateTimeContainer}>
             <TouchableOpacity style={styles.dateTimeCard}>
               <EvilIcons name="calendar" size={24} color={appColors.primary} />
-              <Text style={styles.dateTimeText}>Today, Dec 24</Text>
+              <Text style={styles.dateTimeText}>24/ 12/ 2025</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.dateTimeCard}>
@@ -209,14 +223,14 @@ const PressureRecordScreen = ({ navigation }: any) => {
                 size={20}
                 color={appColors.primary}
               />
-              <Text style={styles.dateTimeText}>14:38</Text>
+              <Text style={styles.dateTimeText}>14: 38</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Save Button */}
         <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Save Reading</Text>
+          <Text style={styles.saveButtonText}>Lưu kết quả</Text>
         </TouchableOpacity>
 
         <SpacingComponent height={20} />
@@ -487,7 +501,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
-    marginHorizontal:22
+    marginHorizontal: 22,
   },
   pickersContainer: {
     gap: 12,

@@ -11,7 +11,7 @@ import { TouchableOpacity } from 'react-native';
 interface Props {
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
   activeOpacity?: number;
 }
@@ -37,7 +37,7 @@ const ButtonComponent = (props: Props) => {
     <TouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      style={[style ?? localStyles.backButton]}
+      style={[localStyles.backButton, style]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
@@ -60,5 +60,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
 });

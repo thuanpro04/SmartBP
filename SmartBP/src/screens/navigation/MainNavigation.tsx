@@ -8,7 +8,6 @@ import PressureRecordScreen from '../pressureRecord/PressureRecordScreen';
 import MeasureGuideScreen from '../measureGuide/MeasureGuideScreen';
 import LanguageScreen from '../language/LanguageScreen';
 import FeedBackScreen from '../feedback/FeedBackScreen';
-import ShareScreen from '../share/ShareScreen';
 import ExportScreen from '../export/ExportScreen';
 import RateUsScreen from '../rateUs/RateUsScreen';
 const Stack = createNativeStackNavigator();
@@ -21,7 +20,6 @@ const MainNavigation = () => {
       <Stack.Screen name="measure" component={MeasureGuideScreen} />
       <Stack.Screen name="language" component={LanguageScreen} />
       <Stack.Screen name="feedback" component={FeedBackScreen} />
-      <Stack.Screen name="share" component={ShareScreen} />
       <Stack.Screen name="export" component={ExportScreen} />
       <Stack.Screen name="star" component={RateUsScreen} />
     </Stack.Navigator>

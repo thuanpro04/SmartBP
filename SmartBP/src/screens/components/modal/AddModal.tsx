@@ -47,7 +47,7 @@ const AddModal = (props: Props) => {
       >
         <View style={styles.content}>
           <RowComponent style={styles.header}>
-            <TextComponent label="Add Result" style={styles.title} />
+            <TextComponent label="Chức năng" style={styles.title} />
             <ButtonComponent onPress={handleClose}>
               <AntDesign
                 name="close"
@@ -67,7 +67,7 @@ const AddModal = (props: Props) => {
                 size={appSizes.iconS}
               />
               <TextComponent
-                label="Blood Pressure"
+                label="Đo huyết áp"
                 style={[styles.label, { color: appColors.cardBg }]}
               />
             </RowComponent>
@@ -90,7 +90,7 @@ const AddModal = (props: Props) => {
                 size={appSizes.iconS}
               />
               <TextComponent
-                label="Heart Rate Pressure"
+                label="Nhập huyết áp"
                 style={[styles.label, { color: appColors.primary }]}
               />
             </RowComponent>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingBottom: 12,
+    paddingBottom: 18,
   },
   title: {
     fontWeight: 'bold',
@@ -121,10 +121,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingVertical: 12,
     marginBottom: 22,
+    alignItems: 'flex-start',
+    flex: 1,
   },
   label: {
-    flex: 1,
-    textAlign: 'center',
     fontWeight: '500',
   },
 });

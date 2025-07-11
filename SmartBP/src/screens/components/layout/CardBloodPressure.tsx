@@ -20,11 +20,11 @@ const CardBloodPressure = ({ item, onNavigation }: any) => {
 
         <MarqueeText
           labelStyle={styles.notifi}
-          style={{ width: '90%' }}
-          label={'Normal Blood Pressure'}
+          style={{ width: '110%' }}
+          label={'Bình thường'}
         />
 
-        <TextComponent label="Pulse: 20 BPM" style={styles.date} />
+        <TextComponent label="Nhịp tim: 20 BPM" style={styles.date} />
       </View>
 
       <ButtonComponent onPress={onNavigation}>

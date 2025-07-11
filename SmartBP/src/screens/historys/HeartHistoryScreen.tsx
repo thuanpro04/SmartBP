@@ -16,7 +16,7 @@ const HeartHistoryScreen = () => {
         <View style={styles.barrier} />
         <View style={styles.noteContainer}>
           <TextComponent label="15:38, 15/06/2023" style={styles.date} />
-          <TextComponent label="Normal" style={styles.notifi} />
+          <TextComponent label="Bình thường" style={styles.notifi} />
         </View>
         <Edit2 color={appColors.iconDefault} size={appSizes.iconS} />
       </RowComponent>

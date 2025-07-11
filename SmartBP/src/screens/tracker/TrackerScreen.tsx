@@ -1,27 +1,17 @@
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Easing,
-  SafeAreaView,
-} from 'react-native';
-import React, { useRef, useState } from 'react';
+import { Add } from 'iconsax-react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { appColors } from '../../utils/appColors';
+import { appSizes } from '../../utils/appSizes';
+import BloodPeressureScreen from '../bloodPeressure/BloodPeressureScreen';
 import {
   ButtonComponent,
   ContainerComponent,
   HeaderComponent,
-  RowComponent,
-  TextComponent,
 } from '../components/layout';
-import { appColors } from '../../utils/appColors';
-import { appSizes } from '../../utils/appSizes';
-import BloodPeressureScreen from '../bloodPeressure/BloodPeressureScreen';
-import HeartRateScreen from '../heartRate/HeartRateScreen';
-import { Add } from 'iconsax-react-native';
-import TabTopNavigation from '../navigation/TabTopNavigation';
 import AddModal from '../components/modal/AddModal';
+import HeartRateScreen from '../heartRate/HeartRateScreen';
+import TabTopNavigation from '../navigation/TabTopNavigation';
 
 const TrackerScreen = ({ navigation }: any) => {
   const [isAddModal, setIsAddModal] = useState(false);
@@ -29,25 +19,25 @@ const TrackerScreen = ({ navigation }: any) => {
     <ContainerComponent style={styles.container}>
       <View style={styles.header}>
         <HeaderComponent
-          title="Tracker"
-          text="History"
+          title="Theo dỗi"
+          text="Lịch sử"
           onPress={() => navigation.navigate('history')}
         />
       </View>
       <TabTopNavigation
         nameScreen1="BloodPressure"
-        tabBarLabel1="Blood Pressure"
+        tabBarLabel1="Huyết Áp"
         component1={BloodPeressureScreen}
         nameScreen2="HeartRate"
         component2={HeartRateScreen}
-        tabBarLabel2="Heart Rate"
+        tabBarLabel2="Nhịp tim"
       />
 
       <ButtonComponent
         onPress={() => setIsAddModal(!isAddModal)}
         style={styles.btnAdd}
       >
-        <Add color={'#ffffff'} />
+        <Add color={'#ffffff'} size={appSizes.iconM} />
       </ButtonComponent>
       <AddModal
         isVisible={isAddModal}

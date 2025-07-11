@@ -8,6 +8,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Host } from 'react-native-portalize';
+import LoginScreen from './src/screens/auth/LoginScreen';
+import SetUpInfomationScreen from './src/screens/auth/SetUpInfomationScreen';
 
 const App = () => {
   return (

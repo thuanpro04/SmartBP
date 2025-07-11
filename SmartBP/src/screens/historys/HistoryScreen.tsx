@@ -17,7 +17,7 @@ const HistoryScreen = ({ navigation }: any) => {
     <ContainerComponent style={styles.container}>
       <View style={styles.header}>
         <HeaderComponent
-          style={{ gap: 0 ,paddingHorizontal:0}}
+          style={{ gap: 0, paddingHorizontal: 0, paddingBottom: 0 }}
           icon={
             <ButtonComponent
               onPress={() => navigation.goBack()}
@@ -30,17 +30,17 @@ const HistoryScreen = ({ navigation }: any) => {
               />
             </ButtonComponent>
           }
-          title="History"
+          title="Lịch sử"
           onPress={() => navigation.navigate('history')}
         />
       </View>
       <TabTopNavigation
         nameScreen1="BloodHistory"
-        tabBarLabel1="Blood Pressure"
+        tabBarLabel1="Huyết áp"
         component1={BloodHistoryScreen}
         nameScreen2="HeartHistory"
         component2={HeartHistoryScreen}
-        tabBarLabel2="Heart Rate"
+        tabBarLabel2="Nhịp tim"
       />
     </ContainerComponent>
   );

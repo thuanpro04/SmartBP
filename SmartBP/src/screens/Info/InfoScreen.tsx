@@ -704,7 +704,7 @@ const InfoScreen = ({ navigation }: any) => {
     <ContainerComponent style={{ paddingBottom: 0 }}>
       <HeaderComponent
         style={styles.header}
-        title="Info &  Knowledge"
+        title="Thông tin & kiến thức"
         onPress={() => navigation.navigate('history')}
       />
 

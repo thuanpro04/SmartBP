@@ -76,7 +76,7 @@ const SettingScreen = ({ navigation }: any) => {
   };
   return (
     <ContainerComponent style={{ paddingBottom: 0 }}>
-      <HeaderComponent title="Settings" style={styles.header} />
+      <HeaderComponent title="Cài đặt" style={styles.header} />
       <View style={styles.main}>
         <View style={styles.card}>
           <ButtonComponent
@@ -89,7 +89,7 @@ const SettingScreen = ({ navigation }: any) => {
                 size={appSizes.iconM}
                 color={appColors.primary}
               />
-              <TextComponent label="Language Options" />
+              <TextComponent label="Ngôn ngữ" />
             </RowComponent>
           </ButtonComponent>
           <ButtonComponent
@@ -102,7 +102,7 @@ const SettingScreen = ({ navigation }: any) => {
                 size={appSizes.iconM}
                 color={appColors.primary}
               />
-              <TextComponent label="Export as file" />
+              <TextComponent label="Xuất file excel" />
             </RowComponent>
           </ButtonComponent>
         </View>
@@ -118,7 +118,7 @@ const SettingScreen = ({ navigation }: any) => {
                 size={appSizes.iconM}
                 color={appColors.primary}
               />
-              <TextComponent label="Rate Us" />
+              <TextComponent label="Đánh giá" />
             </RowComponent>
           </ButtonComponent>
           <ButtonComponent
@@ -131,7 +131,7 @@ const SettingScreen = ({ navigation }: any) => {
                 size={appSizes.iconM}
                 color={appColors.primary}
               />
-              <TextComponent label="Share with Friends" />
+              <TextComponent label="Chia sẽ với mọi người" />
             </RowComponent>
           </ButtonComponent>
           <ButtonComponent
@@ -144,7 +144,7 @@ const SettingScreen = ({ navigation }: any) => {
                 size={appSizes.iconM}
                 color={appColors.primary}
               />
-              <TextComponent label="Feedback" />
+              <TextComponent label="Phản hồi" />
             </RowComponent>
           </ButtonComponent>
         </View>
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
   },
   btnCard: {
     backgroundColor: 'transparent',
+    alignItems: 'flex-start',
   },
   btn: {},
 });

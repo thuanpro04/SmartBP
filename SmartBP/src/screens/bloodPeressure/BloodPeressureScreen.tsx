@@ -13,22 +13,22 @@ import {
 } from '../components/layout';
 import CardBloodPressure from '../components/layout/CardBloodPressure';
 const BloodPeressureScreen = ({ navigation }: any) => {
-  const [selectedFeature, setSelectedFeature] = useState('Latest');
+  const [selectedFeature, setSelectedFeature] = useState('Mới nhất');
   const bloodPressureData = [
     {
-      title: 'Sytolic',
+      title: 'Tâm thu',
       unit: 'mmHg',
       value: 56,
       color: appColors.systolic,
     },
     {
-      title: 'Diastolic',
+      title: 'Tâm trương',
       unit: 'mmHg',
       value: 56,
       color: appColors.diastolic,
     },
     {
-      title: 'Pulse',
+      title: 'Xung giao động',
       unit: 'bmp',
       value: 22,
       color: appColors.pulse,
@@ -56,7 +56,7 @@ const BloodPeressureScreen = ({ navigation }: any) => {
   ];
 
   const onChangeFeature = () => {
-    const arr = ['Latest', 'Older', 'Oldest'];
+    const arr = ['Mới nhất', 'Hôm qua', 'Hôm kia'];
     const currentIndex = arr.indexOf(selectedFeature);
     const nextIndex = (currentIndex + 1) % arr.length;
     setSelectedFeature(arr[nextIndex]);
@@ -73,7 +73,7 @@ const BloodPeressureScreen = ({ navigation }: any) => {
             />
           </ButtonComponent>
           <TextComponent label={selectedFeature} style={styles.cardTitle} />
-          <ButtonComponent onPress={() => console.log('next')}>
+          <ButtonComponent onPress={onChangeFeature}>
             <Entypo
               name="chevron-right"
               size={appSizes.iconL}
@@ -92,8 +92,8 @@ const BloodPeressureScreen = ({ navigation }: any) => {
       <View style={styles.barContainer}>
         <CustomDoubleBarChart
           data={chartData}
-          nameCol1="Systolic"
-          nameCol2="Diastolic"
+          nameCol1="Tâm thu"
+          nameCol2="Tâm trương"
           titleChart="Biểu đồ huyết áp"
         />
       </View>

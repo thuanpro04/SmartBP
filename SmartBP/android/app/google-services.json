@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "106125883520",
+    "project_id": "smartbp-45318",
+    "storage_bucket": "smartbp-45318.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106125883520:android:7ffa6129a13e031ed38e65",
+        "android_client_info": {
+          "package_name": "com.smartbp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106125883520-b8oq1vmunvjmdnf4at8gq80q7v6jrom0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARtNgcJWHkqrGfJ2LD6rqfX4EiBd_m-bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106125883520-b8oq1vmunvjmdnf4at8gq80q7v6jrom0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
