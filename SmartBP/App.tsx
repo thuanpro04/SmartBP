@@ -10,17 +10,20 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Host } from 'react-native-portalize';
 import LoginScreen from './src/screens/auth/LoginScreen';
 import SetUpInfomationScreen from './src/screens/auth/SetUpInfomationScreen';
-
+import { Provider } from 'react-redux';
+import store from './src/screens/redux/store';
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
+      <Provider store={store}>
         <Host>
-          <SafeAreaProvider>
-            <AppRouter />
-          </SafeAreaProvider>
+          <NavigationContainer>
+            <SafeAreaProvider>
+              <AppRouter />
+            </SafeAreaProvider>
+          </NavigationContainer>
         </Host>
-      </NavigationContainer>
+      </Provider>
     </GestureHandlerRootView>
   );
 };

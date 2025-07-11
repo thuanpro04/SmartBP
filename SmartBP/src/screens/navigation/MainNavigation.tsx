@@ -10,6 +10,7 @@ import LanguageScreen from '../language/LanguageScreen';
 import FeedBackScreen from '../feedback/FeedBackScreen';
 import ExportScreen from '../export/ExportScreen';
 import RateUsScreen from '../rateUs/RateUsScreen';
+import AuthNavigation from './AuthNavigation';
 const Stack = createNativeStackNavigator();
 const MainNavigation = () => {
   return (
