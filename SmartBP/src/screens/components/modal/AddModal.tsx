@@ -30,8 +30,8 @@ const AddModal = (props: Props) => {
     onClose();
   };
   const onNavigationMeasure = () => {
-    handleClose();
     navigation.navigate('measure');
+    handleClose();
   };
   const onNavigationHeartRate = () => {
     handleClose();

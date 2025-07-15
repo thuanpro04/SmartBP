@@ -17,11 +17,11 @@ const HistoryScreen = ({ navigation }: any) => {
     <ContainerComponent style={styles.container}>
       <View style={styles.header}>
         <HeaderComponent
-          style={{ gap: 0, paddingHorizontal: 0, paddingBottom: 0 }}
+          style={{ gap: 0, paddingVertical: 6 }}
           icon={
             <ButtonComponent
               onPress={() => navigation.goBack()}
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: 'transparent', paddingHorizontal: 0 }}
             >
               <Entypo
                 name="chevron-left"

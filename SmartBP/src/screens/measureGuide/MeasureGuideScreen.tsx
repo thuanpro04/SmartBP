@@ -11,10 +11,13 @@ import { appSizes } from '../../utils/appSizes';
 import { ArrowLeft2 } from 'iconsax-react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { LineChart } from 'react-native-chart-kit';
+import TagsSelectionModal from '../components/modal/TagsSelectionModal';
 const { width, height } = Dimensions.get('window');
 const MeasureGuideScreen = ({ navigation }: any) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMeasuring, setIsMeasuring] = useState(false);
+  const [showTagsModal, setShowTagsModal] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [measurementHistory, setMeasurementHistory] = useState<any[]>([]);
   const [bloodPressure, setBloodPressure] = useState({
     systolic: 0,
@@ -74,7 +77,23 @@ const MeasureGuideScreen = ({ navigation }: any) => {
 
       setMeasurementHistory(prev => [newMeasurement, ...prev.slice(0, 4)]);
       setIsMeasuring(false);
+      onOpenTagsModal();
     }, 3000);
+  };
+  function onOpenTagsModal() {
+    setShowTagsModal(true);
+  }
+  const handleTagsConfirm = async (selectedTags: string[]) => {
+    setIsSending(true);
+    try {
+      const data = {
+        ...measurementHistory,
+        tags: selectedTags,
+      };
+      console.log('Measurement data: ', data);
+    } catch (error) {
+      console.log('Tags confirm error: ', error);
+    }
   };
   return (
     <ContainerComponent style={styles.container}>
@@ -238,6 +257,11 @@ const MeasureGuideScreen = ({ navigation }: any) => {
           )}
         </View>
       </ScrollView>
+      <TagsSelectionModal
+        visible={showTagsModal}
+        onClose={() => setShowTagsModal(false)}
+        onConfirm={handleTagsConfirm}
+      />
     </ContainerComponent>
   );
 };
@@ -254,7 +278,6 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: appColors.primary,
-    paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     paddingBottom: 20,

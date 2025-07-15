@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user");
+const UserModel = require("../models/User");
 const generateToken = (id, email) => {
   const payload = {
     email,
@@ -17,15 +17,15 @@ exports.updateUserById = async (_id, data) => {
   });
 };
 exports.handleLoginWithGoogle = async (req, res) => {
-  const { email, name} = req.body;
+  const userInfo = req.body;
 
-  if (!email) {
+  if (!userInfo.email) {
     return res.status(400).json({ message: "Email is required" });
   }
 
   try {
     // Tìm user theo email
-    let existingUser = await UserModel.findOne({ email });
+    let existingUser = await UserModel.findOne({ email: userInfo.email });
 
     if (existingUser) {
       // Nếu đã có user → trả về kèm accessToken mới
@@ -37,14 +37,8 @@ exports.handleLoginWithGoogle = async (req, res) => {
     }
 
     // Nếu chưa có → tạo mới
-    const newUser = new UserModel({
-      email,
-      name,
-
-    });
-
+    const newUser = new UserModel(userInfo);
     await newUser.save();
-
     const token = generateToken(newUser._id, newUser.email);
 
     return res.status(200).json({
@@ -56,4 +50,3 @@ exports.handleLoginWithGoogle = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-

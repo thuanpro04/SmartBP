@@ -23,14 +23,15 @@ const AppRouter = () => {
     }, 3000);
     return () => clearTimeout(timeout);
   }, []);
+
   return (
     <>
       {isShowSplash ? (
         <SplashScreen />
-      ) : auth.accessToken ? (
-        <AuthNavigation />
-      ) : (
+      ) : auth?.accessToken ? (
         <MainNavigation />
+      ) : (
+        <AuthNavigation />
       )}
     </>
   );

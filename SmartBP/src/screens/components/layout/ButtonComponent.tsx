@@ -37,7 +37,7 @@ const ButtonComponent = (props: Props) => {
     <TouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      style={[localStyles.backButton, style]}
+      style={[style ?? localStyles.backButton]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >

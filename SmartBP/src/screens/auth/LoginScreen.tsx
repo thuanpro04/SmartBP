@@ -18,11 +18,20 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { RowComponent, TextComponent } from '../components/layout';
 import { Google } from '../../assets/svgs';
+import axiosIntance from '../api/axiosIntance';
+import { API_PATHS } from '../api/apiPath';
+import { useDispatch } from 'react-redux';
+import { addAuth } from '../redux/slices/authSlices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserType } from '../../utils/type/user.type';
+import { displayNotification } from '../../utils/displayNotifice';
 
 const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -67,28 +76,43 @@ const LoginScreen = () => {
     };
     createPulseAnimation();
   }, []);
-
+  async function SaveLoginForUser(user: UserType) {
+    try {
+      setIsLoading(true);
+      const res = await axiosIntance.post(API_PATHS.AUTH.LOGIN, user);
+      if (res && res.data) {
+        const user = res.data.user;
+        dispatch(addAuth(user));
+        AsyncStorage.setItem('user', JSON.stringify(user));
+        console.log('Save data user successfully !!!', user);
+      }
+    } catch (error) {
+      console.log('Save user info fail: ', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   async function handleLoginGoogle() {
     try {
       setIsSigninInProgress(true);
       console.log('Bắt đầu đăng nhập Google...');
-
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
-
       console.log('Play Services OK');
       const response = await GoogleSignin.signIn();
-
-      console.log('Phản hồi Google Sign-In:', response);
-
       if (response.data?.user) {
         console.log('User info:', response.data.user);
-        Alert.alert('Thành công', `Chào mừng ${response.data.user.name}!`);
+        const userInfo: any = response.data.user;
+        await SaveLoginForUser(userInfo);
+        displayNotification.activity(
+          'success',
+          'Chào mừng bạn đã đến với SmartBP',
+          userInfo.name,
+        );
       }
     } catch (error: any) {
       console.log('Lỗi đăng nhập Google:', error);
-
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         Alert.alert('Đã hủy', 'Đăng nhập bị hủy');
       } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -106,8 +130,7 @@ const LoginScreen = () => {
   useEffect(() => {
     console.log('Cấu hình Google Sign-In...');
     GoogleSignin.configure({
-      webClientId:
-        '577846983043-objoo9drq9s0dfcn1dg2rsh2p9bmq5up.apps.googleusercontent.com',
+      webClientId: process.env.WEBCLIENTID,
     });
   }, []);
 

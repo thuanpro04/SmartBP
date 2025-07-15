@@ -68,7 +68,7 @@ const BloodPeressureScreen = ({ navigation }: any) => {
           <ButtonComponent onPress={onChangeFeature}>
             <Entypo
               name="chevron-left"
-              size={appSizes.iconL}
+              size={appSizes.iconM}
               color={appColors.title}
             />
           </ButtonComponent>
@@ -76,7 +76,7 @@ const BloodPeressureScreen = ({ navigation }: any) => {
           <ButtonComponent onPress={onChangeFeature}>
             <Entypo
               name="chevron-right"
-              size={appSizes.iconL}
+              size={appSizes.iconM}
               color={appColors.title}
             />
           </ButtonComponent>
