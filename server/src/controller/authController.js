@@ -40,6 +40,7 @@ exports.handleLoginWithGoogle = async (req, res) => {
     const newUser = new UserModel(userInfo);
     await newUser.save();
     const token = generateToken(newUser._id, newUser.email);
+    console.log("Login successfully !!",userInfo);
 
     return res.status(200).json({
       message: "Created user successfully",

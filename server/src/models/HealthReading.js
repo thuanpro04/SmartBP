@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const healthReadingSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  createAt: { type: Date, default: Date.now() },
   readings: [
     {
       timestamp: { type: Date },
@@ -33,6 +32,7 @@ const healthReadingSchema = new mongoose.Schema({
       ],
     },
   ],
+  createAt: { type: Date, default: Date.now() },
 });
 
 module.exports = mongoose.model("HealthReading", healthReadingSchema);

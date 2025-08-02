@@ -13,15 +13,15 @@ exports.protect = async (req, res) => {
     console.log("Decoded: ", decoded);
 
     req.user = await User.findById(decoded.id).select("-password");
-    next()
+    next();
   } catch (error) {
     res.status(401).json({
       message: "Not authorized, token fail !!",
     });
   }
 };
-exports.limiter=rateLimit({
-    windowMs:1 *60 *1000,
-    max:20,
-    message:"Too many requests from this IP, please try again later"
-})
+exports.limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+  message: "Too many requests from this IP, please try again later",
+});

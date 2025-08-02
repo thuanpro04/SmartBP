@@ -27,7 +27,7 @@ const CardBloodPressure = ({ item, onNavigation }: any) => {
         <TextComponent label="Nhịp tim: 20 BPM" style={styles.date} />
       </View>
 
-      <ButtonComponent onPress={onNavigation}>
+      <ButtonComponent onPress={onNavigation} style={styles.btnEdit}>
         <Edit2 color={appColors.iconDefault} size={appSizes.iconS} />
       </ButtonComponent>
     </RowComponent>
@@ -74,4 +74,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: appSizes.xxxLarge,
   },
+  btnEdit:{
+  }
 });

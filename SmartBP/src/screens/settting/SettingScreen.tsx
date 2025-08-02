@@ -92,6 +92,7 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Ngôn ngữ" />
             </RowComponent>
           </ButtonComponent>
+          <View style={styles.cardBorderBottom} />
           <ButtonComponent
             onPress={() => onPress('export')}
             style={styles.btnCard}
@@ -121,6 +122,8 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Đánh giá" />
             </RowComponent>
           </ButtonComponent>
+          <View style={styles.cardBorderBottom} />
+
           <ButtonComponent
             onPress={() => onPress('share')}
             style={styles.btnCard}
@@ -134,6 +137,8 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Chia sẽ với mọi người" />
             </RowComponent>
           </ButtonComponent>
+          <View style={styles.cardBorderBottom} />
+
           <ButtonComponent
             onPress={() => onPress('feedback')}
             style={styles.btnCard}
@@ -189,4 +194,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   btn: {},
+  cardBorderBottom: {
+    borderBottomWidth: 0.3,
+    width: '100%',
+    borderColor: appColors.border,
+  },
 });
