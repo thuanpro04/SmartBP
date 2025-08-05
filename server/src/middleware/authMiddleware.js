@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const rateLimit = require("express-rate-limit");
-exports.protect = async (req, res) => {
-  let accessToken = req.headers.authorization?.split("")[1];
+exports.protect = async (req, res, next) => {
+  let accessToken = req.headers.authorization?.split(" ")[1];
   if (!accessToken) {
     return res.status(401).json({
       message: "No authorized, no token",

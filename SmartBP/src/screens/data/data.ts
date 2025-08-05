@@ -1,45 +1,18 @@
 import { appColors } from '../../utils/appColors';
-
-export const menuInfo = [
-  {
-    id: '1',
-    title: 'Learn About Blood Pressure',
-    background: appColors.cardLearn,
-    icon: require('../../assets/images/learn-blood-pressure.png'),
-    uriBackground: require('../../assets/images/cloud1.png'),
-    screen: 'learn',
-  },
-
-  {
-    id: '3',
-    title: 'Who is at risk for hight blood pressure',
-    background: appColors.cardWhoHighBP,
-    icon: require('../../assets/images/hight-blood-pressure.png'),
-    uriBackground: require('../../assets/images/cloud3.png'),
-    screen: 'risk',
-  },
-  {
-    id: '4',
-    title: 'How can i prevent hight blood pressure?',
-    background: appColors.cardpPreventBP,
-    icon: require('../../assets/images/protect-blood-pressure.png'),
-    uriBackground: require('../../assets/images/cloud4.png'),
-    screen: 'prevent',
-  },
-  {
-    id: '5',
-    title: 'Lower Blood Pressure by Exercises',
-    background: appColors.cardLowerBP,
-    icon: require('../../assets/images/low-blood-pressure.png'),
-    uriBackground: require('../../assets/images/cloud3.png'),
-    screen: 'lower',
-  },
-  {
-    id: '6',
-    title: 'How can i prevent hight blood pressure?',
-    background: appColors.cardHowHighBP,
-    icon: require('../../assets/images/problem-blood-pressure.png'),
-    uriBackground: require('../../assets/images/cloud1.png'),
-    screen: 'prevent',
-  },
+const availableTags = [
+  { key: 'vui_ve', label: '😊 Vui vẻ', color: '#4CAF50' },
+  { key: 'binh_thuong', label: '😐 Bình thường', color: '#2196F3' },
+  { key: 'stress', label: '😰 Stress', color: '#FF5722' },
+  { key: 'lo_lang', label: '😟 Lo lắng', color: '#FF9800' },
+  { key: 'an_man', label: '🍽️ Vừa ăn no', color: '#795548' },
+  { key: 'uong_ca_phe', label: '☕ Uống cà phê', color: '#8D6E63' },
+  { key: 'uong_ruou_bia', label: '🍺 Uống rượu/bia', color: '#FFC107' },
+  { key: 'tap_the_duc', label: '🏃 Tập thể dục', color: '#4CAF50' },
+  { key: 'di_bo', label: '🚶 Đi bộ', color: '#8BC34A' },
+  { key: 'nghi_ngoi', label: '🛋️ Nghỉ ngơi', color: '#9C27B0' },
+  { key: 'ngu_ngon', label: '😴 Ngủ ngon', color: '#3F51B5' },
+  { key: 'thieu_ngu', label: '😵 Thiếu ngủ', color: '#F44336' },
+  { key: 'da_uong_thuoc', label: '💊 Đã uống thuốc', color: '#009688' },
+  { key: 'quen_uong_thuoc', label: '❌ Quên uống thuốc', color: '#F44336' },
 ];
+export { availableTags };

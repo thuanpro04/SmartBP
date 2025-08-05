@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
 const healthReadingSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique:true
+  },
   readings: [
     {
-      timestamp: { type: Date },
+      timestamp: { type: Date, default: Date.now },
       systolic: { type: Number, required: true },
       diastolic: { type: Number, required: true },
       pulse: { type: Number, required: true },
@@ -26,6 +31,7 @@ const healthReadingSchema = new mongoose.Schema({
             "thieu_ngu",
             "da_uong_thuoc",
             "quen_uong_thuoc",
+            "mat_ngu"
           ],
           required: true,
         },

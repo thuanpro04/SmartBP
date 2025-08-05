@@ -94,6 +94,13 @@ function generateSuggestion(tag, effect) {
 const oneHotEncode = (tags, allTags) => {
   return allTags.map((tag) => tags.includes(tag));
 };
+function getTopSuggestions(analysis, topN = 3, minConfidence = 0.15) {
+  return analysis
+    .filter((item) => item.confidence >= minConfidence)
+    .sort((a, b) => Math.abs(b.effect) - Math.abs(a.effect))
+    .slice(0, topN);
+}
+
 async function analyzeUserData(userId, readings) {
   try {
     console.log(
@@ -150,17 +157,20 @@ async function analyzeUserData(userId, readings) {
     x.dispose();
     y.dispose();
     model.dispose();
-    return insights;
+    const analysis = getTopSuggestions(insights);
+    return analysis;
   } catch (error) {
     console.error(`❌ Lỗi phân tích user ${userId}:`, error.message);
     return [];
   }
 }
+// sau khi đo or sau nhìu ngày đo dựa vào tag => gợi ý mỗi tag đó
+// ví dụ thiếu ngủ => 💡 Thiếu ngủ làm tăng huyết áp của bạn 4.1 mmHg. Hãy ngủ đủ 7-8 tiếng và tạo thói quen ngủ tốt.
 exports.runAIAnalysis = async (req, res) => {
-  const { id } = req.query;
+  const { userId } = req.params;
   try {
     console.log("\n🚀 Bắt đầu phân tích AI...");
-    const users = await HealthReading.findById(id);
+    const users = await HealthReading.findOne({ userId });
     if (!users) {
       return res.status(404).json({
         message: "User not found !!!",
@@ -175,6 +185,7 @@ exports.runAIAnalysis = async (req, res) => {
       });
     }
     const userInsights = await analyzeUserData(users.userId, users.readings);
+
     return res.status(200).json({
       message: "Analyze successfully !!!",
       userInsights,
@@ -183,8 +194,42 @@ exports.runAIAnalysis = async (req, res) => {
     console.log("Analysis error: ", error);
   }
 };
+exports.saveInfoMeasureBloodPressure = async (req, res) => {
+  const { userId, dataBP } = req.body;
+  try {
+    if (!userId || !dataBP) {
+      return res.status(400).json({
+        message: "Missing required fields: userId or dataBP",
+      });
+    }
+    const userExisting = await HealthReading.findOne({ userId });
+    if (!userExisting) {
+      await HealthReading.create({
+        userId,
+        readings: [dataBP],
+      });
+      return res.status(200).json({
+        message: "Create health reading successfully !!",
+      });
+    }
+    userExisting.readings.push(dataBP);
+    await userExisting.save();
+    res.status(200).json({
+      message: "Update blood pressure data successfully!",
+    });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found !!!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: `Server error: save info blood pressure ${error}`,
+    });
+  }
+};
 exports.getUserInfo = async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const user = await getUserById(id);
     if (!user) {
@@ -199,3 +244,4 @@ exports.getUserInfo = async (req, res) => {
     console.log("Get user error: ", error);
   }
 };
+
