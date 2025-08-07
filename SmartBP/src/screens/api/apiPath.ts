@@ -2,6 +2,9 @@ export const BASE_URL = 'http://192.168.1.11:2403';
 export const API_PATHS = {
   AUTH: {
     LOGIN: '/api/v1/auth/login',
-    GET_USER_INFO: '/api/v1/auth/getUser',
+    UPDATE_USER_INFO: '/api/v1/auth/update',
+  },
+  USER: {
+    GET_USER_INFO: '/api/v1/user/info',
   },
 };

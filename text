@@ -1,0 +1,20 @@
+//onboarding 
+// 1. ảnh gợi ý người dùng sử dụng gmail của người thân để tiện cảnh báo
+// 2. giới thiệu về cách thức đo
+
+// AI
+// 2. AI phân tích tác động của hành vi đến huyết áp
+// Ý tưởng:
+// Dựa trên các tags như: "uống cà phê", "thiếu ngủ", "tập thể dục", "uống thuốc", "stress"... và huyết áp đo tương ứng, huấn luyện mô hình AI để tìm ra hành vi nào ảnh hưởng tiêu cực hoặc tích cực đến huyết áp của người dùng.
+// Mục tiêu:
+// Tư vấn người dùng cá nhân hóa: "Bạn thường tăng huyết áp sau khi uống cà phê", "Tập thể dục giúp bạn ổn định huyết áp hơn".
+// Mô hình gợi ý:
+// Classification + Feature importance (Tree-based models hoặc SHAP explainability)
+
+// 5. AI cảnh báo khẩn cấp (Anomaly Detection)
+// Ý tưởng:
+// Dùng mô hình AI học các mẫu bình thường của người dùng, khi đo bất thường (tăng/giảm đột ngột) sẽ cảnh báo hoặc tự động gửi tin cho người thân.
+
+// Kỹ thuật:
+// Isolation Forest / Autoencoder để phát hiện bất thường.
+// Có thể tích hợp gửi SMS/email khi có cảnh báo.

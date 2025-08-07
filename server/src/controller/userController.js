@@ -164,6 +164,7 @@ async function analyzeUserData(userId, readings) {
     return [];
   }
 }
+//2. AI phân tích tác động của hành vi đến huyết áp
 // sau khi đo or sau nhìu ngày đo dựa vào tag => gợi ý mỗi tag đó
 // ví dụ thiếu ngủ => 💡 Thiếu ngủ làm tăng huyết áp của bạn 4.1 mmHg. Hãy ngủ đủ 7-8 tiếng và tạo thói quen ngủ tốt.
 exports.runAIAnalysis = async (req, res) => {

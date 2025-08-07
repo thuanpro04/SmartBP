@@ -12,10 +12,11 @@ interface Props {
   isVisible: boolean;
   onClose: () => void;
   navigation: any;
+  onOpenModalInfo: () => void;
 }
 
 const AddModal = (props: Props) => {
-  const { isVisible, onClose, navigation } = props;
+  const { isVisible, onClose, navigation, onOpenModalInfo } = props;
   const modalRef = useRef<Modalize>(null);
   useEffect(() => {
     if (isVisible) {
@@ -33,9 +34,9 @@ const AddModal = (props: Props) => {
     navigation.navigate('measure');
     handleClose();
   };
-  const onNavigationHeartRate = () => {
+  const onSetUpModal = () => {
     handleClose();
-    navigation.navigate('record');
+    onOpenModalInfo();
   };
   return (
     <Portal>
@@ -73,7 +74,7 @@ const AddModal = (props: Props) => {
             </RowComponent>
           </ButtonComponent>
           <ButtonComponent
-            onPress={() => {}}
+            onPress={onSetUpModal}
             style={[
               styles.btn,
               {
@@ -84,13 +85,13 @@ const AddModal = (props: Props) => {
             ]}
           >
             <RowComponent style={{}}>
-              <FontAwesome5
-                name="fingerprint"
+              <AntDesign
+                name="profile"
                 color={appColors.pulse}
                 size={appSizes.iconS}
               />
               <TextComponent
-                label="Nhập huyết áp"
+                label="Thiết lập thông tin"
                 style={[styles.label, { color: appColors.primary }]}
               />
             </RowComponent>

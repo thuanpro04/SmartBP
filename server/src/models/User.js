@@ -79,8 +79,7 @@ const userSchema = new mongoose.Schema({
         startDate: Date,
       },
     ],
-    // Dị ứng thuốc
-    allergies: [String],
+
   },
   lifestyle: {
     smokingStatus: {

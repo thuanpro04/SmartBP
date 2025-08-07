@@ -40,7 +40,7 @@ exports.handleLoginWithGoogle = async (req, res) => {
     const newUser = new UserModel(userInfo);
     await newUser.save();
     const token = generateToken(newUser._id, newUser.email);
-    console.log("Login successfully !!",userInfo);
+    console.log("Login successfully !!", userInfo);
 
     return res.status(200).json({
       message: "Created user successfully",
@@ -49,5 +49,30 @@ exports.handleLoginWithGoogle = async (req, res) => {
   } catch (error) {
     console.log("Login with google error: ", error);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+exports.handleUpdateUserInfo = async (req, res) => {
+  const user = req.body;
+
+  try {
+    if (!user.id) {
+      return res.status(400).json({ message: "Thiếu user._id" });
+    }
+    const { id, ...updateData } = user;
+
+    const updatedUser = await UserModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found !!",
+      });
+    }
+    res.status(200).json({
+      message: "Update successfully !!!",
+      result: updatedUser,
+    });
+  } catch (error) {
+    console.log("Update user info error: ", error);
   }
 };

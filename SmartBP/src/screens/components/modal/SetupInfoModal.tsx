@@ -13,6 +13,8 @@ import DatePicker from 'react-native-date-picker';
 import React, { useEffect, useState } from 'react';
 import { ButtonComponent, RowComponent, TextComponent } from '../layout';
 import { appColors } from '../../../utils/appColors';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/slices/authSlices';
 interface Props {
   visible: boolean;
   onClose: () => void;
@@ -26,16 +28,20 @@ interface step1 {
   bmi: number;
 }
 interface step2 {
-  cardiovascularDiseases: string[];
-  otherConditions: string[];
-  currentMedications: string[];
-  allergies: string[];
-  smokingStatus: string;
+  medicalHistory: {
+    cardiovascularDiseases: string[]; //Bệnh tim mạch
+    otherConditions: string[]; // bệnh khác
+    currentMedications: any[]; // Thuốc hiện tại
+  };
+  lifestyle: {
+    smokingStatus: 'never' | 'former' | 'current';
+  };
 }
 const SetupInfoModal = (props: Props) => {
   const { onClose, onComplete, visible } = props;
   const [currentStep, setCurrentStep] = useState(1);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const profile = useSelector(authSelector);
   // step1 -info
   const [healthInfo, setHealthInfo] = useState<step1>({
     dateOfBirth: new Date(),
@@ -44,15 +50,24 @@ const SetupInfoModal = (props: Props) => {
     weight: 0,
     bmi: 0,
   });
+  const [newMedication, setNewMedication] = useState({
+    name: '',
+    type: '',
+    dosage: '',
+    frequency: '',
+    startDate: new Date(),
+  });
   // Step 2 - Medical History & Lifestyle
   const [medicalInfo, setMedicalInfo] = useState<step2>({
-    cardiovascularDiseases: [],
-    otherConditions: [],
-    currentMedications: [],
-    allergies: [],
-    smokingStatus: 'never',
+    medicalHistory: {
+      cardiovascularDiseases: [],
+      otherConditions: [],
+      currentMedications: [],
+    },
+    lifestyle: {
+      smokingStatus: 'never',
+    },
   });
-  const [newAllergy, setNewAllergy] = useState('');
   useEffect(() => {
     if (healthInfo.height && healthInfo.weight) {
       const heightInMeters = healthInfo.height / 100;
@@ -114,10 +129,56 @@ const SetupInfoModal = (props: Props) => {
     const completeData = {
       ...healthInfo,
       ...medicalInfo,
+      id: profile._id,
     };
+    console.log(completeData);
     onComplete(completeData);
     onClose();
   };
+
+  const removeMedication = (index: number) => {
+    setMedicalInfo(prev => ({
+      ...prev,
+      currentMedications: prev.medicalHistory.currentMedications.filter(
+        (_, i) => i !== index,
+      ),
+    }));
+  };
+  const addMedication = () => {
+    if (!newMedication.name.trim()) {
+      Alert.alert('Thông báo', 'Vui lòng nhập tên thuốc');
+      return;
+    }
+    setMedicalInfo((prev: any) => ({
+      ...prev,
+      currentMedications: [...prev.currentMedications, { ...newMedication }],
+    }));
+    setNewMedication({
+      name: '',
+      type: '',
+      dosage: '',
+      frequency: '',
+      startDate: new Date(),
+    });
+  };
+  const toggleSelection = (
+    array: string[],
+    value: string,
+    field: 'cardiovascularDiseases' | 'otherConditions',
+  ) => {
+    const newArray = array.includes(value)
+      ? array.filter(item => item !== value)
+      : [...array, value];
+
+    setMedicalInfo(prev => ({
+      ...prev,
+      medicalHistory: {
+        ...prev.medicalHistory,
+        [field]: newArray,
+      },
+    }));
+  };
+
   const RenderStep1 = () => {
     return (
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -172,7 +233,7 @@ const SetupInfoModal = (props: Props) => {
               onChangeText={text =>
                 setHealthInfo(prev => ({
                   ...prev,
-                  height: parseInt(text) || 0,
+                  height: text === '' ? 0 : parseInt(text),
                 }))
               }
               keyboardType="numeric"
@@ -186,12 +247,12 @@ const SetupInfoModal = (props: Props) => {
             <TextInput
               style={styles.numberInput}
               value={healthInfo.weight.toString()}
-              onChangeText={text =>
+              onChangeText={text => {
                 setHealthInfo(prev => ({
                   ...prev,
-                  weight: parseInt(text) || 0,
-                }))
-              }
+                  weight: text === '' ? 0 : parseInt(text),
+                }));
+              }}
               keyboardType="numeric"
               placeholder="65"
               placeholderTextColor="#999"
@@ -225,20 +286,230 @@ const SetupInfoModal = (props: Props) => {
         <DatePicker
           modal
           open={showDatePicker}
-          date={healthInfo.dateOfBirth}
+          date={new Date()}
           mode="date"
           maximumDate={new Date()}
           onConfirm={date => {
             setShowDatePicker(false);
-            setHealthInfo(prev => ({ ...prev, dateOfBirth: date }));
+            setHealthInfo(prev => ({
+              ...prev,
+              dateOfBirth: date,
+            }));
           }}
           onCancel={() => setShowDatePicker(false)}
         />
       </ScrollView>
     );
   };
+
   const RenderStep2 = () => {
-    return <ScrollView></ScrollView>;
+    return (
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <TextComponent label="Thông tin sức khỏe" style={styles.stepTitle} />
+        <View style={styles.section}>
+          <TextComponent label="Trạng thái hút thuốc" style={styles.label} />
+          <RowComponent>
+            {smokingOptions.map(item => (
+              <ButtonComponent
+                key={item.value}
+                style={[
+                  styles.genderButton,
+                  medicalInfo.lifestyle.smokingStatus === item.value &&
+                    styles.selectedGender,
+                ]}
+                onPress={() =>
+                  setMedicalInfo((prev: any) => ({
+                    ...prev,
+                    smokingStatus: item.value,
+                  }))
+                }
+              >
+                <TextComponent
+                  label={item.label}
+                  style={[
+                    styles.genderText,
+                    medicalInfo.lifestyle.smokingStatus === item.value &&
+                      styles.selectedGenderText,
+                  ]}
+                />
+              </ButtonComponent>
+            ))}
+          </RowComponent>
+        </View>
+        <View style={styles.section}>
+          <TextComponent label="Bệnh tim mạch (nếu có)" style={styles.label} />
+          <TextComponent
+            label="Chọn các bệnh bạn đang mắc phải"
+            style={styles.subtitle}
+          />
+          <View style={styles.checkboxGrid}>
+            {cardiovascularOptions.map(option => (
+              <ButtonComponent
+                key={option.value}
+                style={[
+                  styles.checkboxItem,
+                  medicalInfo.medicalHistory.cardiovascularDiseases.includes(
+                    option.value,
+                  ) && styles.checkedItem,
+                ]}
+                onPress={() =>
+                  toggleSelection(
+                    medicalInfo.medicalHistory.cardiovascularDiseases,
+                    option.value,
+                    'cardiovascularDiseases',
+                  )
+                }
+              >
+                <TextComponent
+                  style={[
+                    styles.checkboxText,
+                    medicalInfo.medicalHistory.cardiovascularDiseases.includes(
+                      option.value,
+                    ) && styles.checkedText,
+                  ]}
+                  label={option.label}
+                />
+              </ButtonComponent>
+            ))}
+          </View>
+        </View>
+        {/* Other Conditions */}
+        <View style={styles.section}>
+          <TextComponent label="Bệnh khác (nếu có)" style={styles.label} />
+          <TextComponent
+            label="Chọn các bệnh bạn đang mắc phải"
+            style={styles.subtitle}
+          />
+          <View style={styles.checkboxGrid}>
+            {otherConditionsOptions.map(option => (
+              <ButtonComponent
+                key={option.value}
+                style={[
+                  styles.checkboxItem,
+                  medicalInfo.medicalHistory.otherConditions.includes(
+                    option.value,
+                  ) && styles.checkedItem,
+                ]}
+                onPress={() =>
+                  toggleSelection(
+                    medicalInfo.medicalHistory.otherConditions,
+                    option.value,
+                    'otherConditions',
+                  )
+                }
+              >
+                <TextComponent
+                  label={option.label}
+                  style={[
+                    styles.checkboxText,
+                    medicalInfo.medicalHistory.otherConditions.includes(
+                      option.value,
+                    ) && styles.checkedText,
+                  ]}
+                />
+              </ButtonComponent>
+            ))}
+          </View>
+        </View>
+        {/* Current Medications */}
+        <View style={styles.section}>
+          <TextComponent label="Thuốc đang dùng" style={styles.label} />
+          <TextComponent
+            label="Thêm các loại thuốc bạn đang sử dụng"
+            style={styles.subtitle}
+          />
+
+          <View style={styles.medicationForm}>
+            <TextInput
+              style={styles.textInput}
+              value={newMedication.name}
+              onChangeText={text =>
+                setNewMedication(prev => ({ ...prev, name: text }))
+              }
+              placeholder="Tên thuốc (ví dụ: Amlodipine)"
+              placeholderTextColor="#999"
+            />
+
+            <View style={styles.medicationTypeRow}>
+              <TextComponent label="Loại thuốc:" style={styles.miniLabel} />
+              <View style={styles.typeButtons}>
+                {medicationTypes.map(type => (
+                  <ButtonComponent
+                    key={type.value}
+                    style={[
+                      styles.typeButton,
+                      newMedication.type === type.value && styles.selectedType,
+                    ]}
+                    onPress={() =>
+                      setNewMedication(prev => ({ ...prev, type: type.value }))
+                    }
+                  >
+                    <TextComponent
+                      label={type.label}
+                      style={[
+                        styles.typeText,
+                        newMedication.type === type.value &&
+                          styles.selectedTypeText,
+                      ]}
+                    ></TextComponent>
+                  </ButtonComponent>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.dosageRow}>
+              <TextInput
+                style={[styles.textInput, styles.dosageInput]}
+                value={newMedication.dosage}
+                onChangeText={text =>
+                  setNewMedication(prev => ({ ...prev, dosage: text }))
+                }
+                placeholder="Liều dùng"
+                placeholderTextColor="#999"
+              />
+              <TextInput
+                style={[styles.textInput, styles.dosageInput]}
+                value={newMedication.frequency}
+                onChangeText={text =>
+                  setNewMedication(prev => ({ ...prev, frequency: text }))
+                }
+                placeholder="Tần suất"
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <ButtonComponent
+              style={styles.addMedButton}
+              onPress={addMedication}
+            >
+              <TextComponent
+                label="+ Thêm thuốc"
+                style={styles.addMedButtonText}
+              />
+            </ButtonComponent>
+          </View>
+
+          {/* Medication List */}
+          {medicalInfo.medicalHistory.currentMedications.map((med, index) => (
+            <View key={index} style={styles.medicationCard}>
+              <View style={styles.medInfo}>
+                <TextComponent label={med.name} style={styles.medName} />
+                <TextComponent
+                  label={`${med.dosage} - ${med.frequency}`}
+                  style={styles.medDetails}
+                />
+              </View>
+              <ButtonComponent
+                style={styles.removeButton}
+                onPress={() => removeMedication(index)}
+              >
+                <TextComponent label="Xóa" style={styles.removeText} />
+              </ButtonComponent>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    );
   };
   return (
     <Modal
@@ -274,7 +545,8 @@ const SetupInfoModal = (props: Props) => {
           </View>
         </View>
         {/* Content */}
-        {currentStep === 1 ? <RenderStep1 /> : <RenderStep2 />}
+        {currentStep === 1 ? RenderStep1() : RenderStep2()}
+
         {/* Footer Buttons */}
         <RowComponent style={styles.footer}>
           {currentStep > 1 && (
@@ -493,6 +765,183 @@ const styles = StyleSheet.create({
   nextText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: '600',
+  },
+  checkboxGrid: {
+    gap: 12,
+  },
+  checkboxItem: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  checkedItem: {
+    backgroundColor: '#E3F2FD',
+    borderColor: '#2196F3',
+  },
+  checkboxText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
+  checkedText: {
+    color: '#1976D2',
+    fontWeight: '500',
+  },
+  medicationForm: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  textInput: {
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    marginBottom: 12,
+  },
+  medicationTypeRow: {
+    marginBottom: 12,
+  },
+  miniLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  typeButtons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  typeButton: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  selectedType: {
+    backgroundColor: '#FF9800',
+    borderColor: '#FF9800',
+  },
+  typeText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  selectedTypeText: {
+    color: '#fff',
+  },
+  dosageRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  dosageInput: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  addMedButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  addMedButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  medicationCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  medInfo: {
+    flex: 1,
+  },
+  medName: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+    marginBottom: 4,
+  },
+  medDetails: {
+    fontSize: 14,
+    color: '#666',
+  },
+  removeButton: {
+    backgroundColor: '#f44336',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  removeText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  allergyInputRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  allergyInput: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  addAllergyButton: {
+    backgroundColor: '#FF9800',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+  },
+  addAllergyText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  allergyTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  allergyTag: {
+    backgroundColor: '#FFF3E0',
+    borderWidth: 1,
+    borderColor: '#FFB74D',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  allergyTagText: {
+    fontSize: 14,
+    color: '#E65100',
+    marginRight: 8,
+  },
+  removeTagButton: {
+    backgroundColor: '#f44336',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeTagText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: '600',
   },
 });

@@ -15,10 +15,17 @@ import { appSizes } from '../../utils/appSizes';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ExportNotifiModal from '../components/modal/ExportNotifiModal';
 import { useExcelExport } from '../hook/useExcelExport';
+import LoadingModal from '../components/modal/LoadingModal';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { removeAuth } from '../redux/slices/authSlices';
 const SettingScreen = ({ navigation }: any) => {
   const [isExportModal, setIsExportModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { exportData, isExporting } = useExcelExport();
-  const onPress = (key: string) => {
+  const dispatch = useDispatch();
+
+  const onPress = async (key: string) => {
     switch (key) {
       case 'language':
         navigation.navigate('language');
@@ -32,9 +39,22 @@ const SettingScreen = ({ navigation }: any) => {
       case 'feedback':
         navigation.navigate('feedback');
         break;
+      case 'logout':
+        await handleLogOut();
+        break;
       default:
         navigation.navigate('share');
         break;
+    }
+  };
+  const handleLogOut = async () => {
+    try {
+      setIsLoading(true);
+      await AsyncStorage.removeItem('user');
+      dispatch(removeAuth());
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Logout error: ', error);
     }
   };
   function onOpenModal() {
@@ -152,6 +172,20 @@ const SettingScreen = ({ navigation }: any) => {
               <TextComponent label="Phản hồi" />
             </RowComponent>
           </ButtonComponent>
+          <View style={styles.cardBorderBottom} />
+          <ButtonComponent
+            onPress={() => onPress('logout')}
+            style={styles.btnCard}
+          >
+            <RowComponent style={styles.row}>
+              <MaterialIcons
+                name="logout"
+                size={appSizes.iconM}
+                color={appColors.primary}
+              />
+              <TextComponent label="Đăng xuất" />
+            </RowComponent>
+          </ButtonComponent>
         </View>
       </View>
       <ExportNotifiModal
@@ -159,6 +193,12 @@ const SettingScreen = ({ navigation }: any) => {
         onClose={onCloseModal}
         onConfirm={handleExport}
         isLoading={isExporting}
+      />
+      <LoadingModal
+        visible={isLoading}
+        type="login"
+        message="Đang đăng xuất..."
+        subMessage="Thoát khỏi tài khoản"
       />
     </ContainerComponent>
   );
@@ -198,5 +238,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
     width: '100%',
     borderColor: appColors.border,
+    marginVertical: 8,
   },
 });

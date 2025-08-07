@@ -20,9 +20,13 @@ import AddModal from '../components/modal/AddModal';
 import HeartRateScreen from '../heartRate/HeartRateScreen';
 import TabTopNavigation from '../navigation/TabTopNavigation';
 import SetupInfoModal from '../components/modal/SetupInfoModal';
+import { userServices } from '../services/userServices';
+import LoadingModal from '../components/modal/LoadingModal';
 
 const TrackerScreen = ({ navigation }: any) => {
   const [isAddModal, setIsAddModal] = useState(false);
+  const [isInfoModal, setIsInfoModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const requestPermissions = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -43,6 +47,26 @@ const TrackerScreen = ({ navigation }: any) => {
       } catch (error) {
         console.log('Lỗi khi xin quyền:', error);
       }
+    }
+  };
+  const handleSetUpInfoUser = async (data: any) => {
+    setIsLoading(true);
+    if (!data) {
+      console.log('Data empty !!');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      setIsLoading(false);
+      const res = await userServices.setUpUserInfo(data);
+      if (res && res.data) {
+        console.log(res.data.message, res.data.result);
+      }
+      setIsLoading(true);
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Set up user info error: ', error);
+      return;
     }
   };
   useFocusEffect(
@@ -75,11 +99,22 @@ const TrackerScreen = ({ navigation }: any) => {
         <Add color={'#ffffff'} size={appSizes.iconM} />
       </ButtonComponent>
       <AddModal
+        onOpenModalInfo={() => setIsInfoModal(true)}
         isVisible={isAddModal}
         onClose={() => setIsAddModal(false)}
         navigation={navigation}
       />
-      <SetupInfoModal visible={true} onClose={() => {}} onComplete={() => {}} />
+      <SetupInfoModal
+        visible={isInfoModal}
+        onClose={() => setIsInfoModal(false)}
+        onComplete={handleSetUpInfoUser}
+      />
+      <LoadingModal
+        type="default"
+        visible={isLoading}
+        message="Đang xử lý..."
+        subMessage="Vui lòng đợi trong giây lát"
+      />
     </ContainerComponent>
   );
 };

@@ -38,8 +38,7 @@ export default HeaderComponent;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 22,
+    padding: 16,
     backgroundColor: appColors.cardBg,
   },
   title: {
@@ -51,10 +50,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: appSizes.xLarge,
     color: appColors.textPrimary,
-    fontStyle:'italic',
-    fontWeight:'300',
+    fontStyle: 'italic',
+    fontWeight: '300',
   },
-  btn:{
-
-  }
+  btn: {},
 });
