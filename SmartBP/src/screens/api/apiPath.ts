@@ -6,5 +6,6 @@ export const API_PATHS = {
   },
   USER: {
     GET_USER_INFO: '/api/v1/user/info',
+    GET_USER_MEASUREINFO: '/api/v1/user/measureinfo',
   },
 };

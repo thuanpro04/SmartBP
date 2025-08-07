@@ -12,6 +12,7 @@ import { ArrowLeft2 } from 'iconsax-react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { LineChart } from 'react-native-chart-kit';
 import TagsSelectionModal from '../components/modal/TagsSelectionModal';
+import { getBloodPressureStatus } from '../../utils/format';
 const { width, height } = Dimensions.get('window');
 const MeasureGuideScreen = ({ navigation }: any) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -39,15 +40,7 @@ const MeasureGuideScreen = ({ navigation }: any) => {
       },
     ],
   });
-  const getBloodPressureStatus = (systolic: number, diastolic: number) => {
-    if (systolic < 120 && diastolic < 80)
-      return { text: 'Bình thường', color: '#4CAF50' };
-    if (systolic < 130 && diastolic < 80)
-      return { text: 'Hơi cao', color: '#FF9800' };
-    if (systolic < 140 || diastolic < 90)
-      return { text: 'Cao độ 1', color: '#FF5722' };
-    return { text: 'Cao độ 2', color: '#F44336' };
-  };
+  
   const bpStatus = getBloodPressureStatus(
     bloodPressure.systolic,
     bloodPressure.diastolic,

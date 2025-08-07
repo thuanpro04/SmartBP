@@ -245,4 +245,32 @@ exports.getUserInfo = async (req, res) => {
     console.log("Get user error: ", error);
   }
 };
+exports.getMeasureInfo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!id) {
+      return res.status(404).json({
+        message: "Missing required field id",
+      });
+    }
+    const user = await HealthReading.findOne({ userId: id });
+    if (!user) {
+      return res.status(404).json({
+        message: "User has no measurement data exists !!",
+      });
+    }
+    const result = user.readings
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 3);
+    console.log("Get measure info successfully : ", result);
 
+    res.status(200).json({
+      message: "Get measure info successfully !!",
+      result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: `Get measure info server error: ${error}`,
+    });
+  }
+};

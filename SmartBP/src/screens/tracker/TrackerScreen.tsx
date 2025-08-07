@@ -22,11 +22,14 @@ import TabTopNavigation from '../navigation/TabTopNavigation';
 import SetupInfoModal from '../components/modal/SetupInfoModal';
 import { userServices } from '../services/userServices';
 import LoadingModal from '../components/modal/LoadingModal';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../redux/slices/authSlices';
 
 const TrackerScreen = ({ navigation }: any) => {
   const [isAddModal, setIsAddModal] = useState(false);
   const [isInfoModal, setIsInfoModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const profile = useSelector(authSelector);
   const requestPermissions = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -69,6 +72,7 @@ const TrackerScreen = ({ navigation }: any) => {
       return;
     }
   };
+  
   useFocusEffect(
     useCallback(() => {
       requestPermissions();

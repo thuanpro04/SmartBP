@@ -7,7 +7,9 @@ import TextComponent from './TextComponent';
 import { Edit, Edit2 } from 'iconsax-react-native';
 import MarqueeText from './MarqueeText';
 import ButtonComponent from './ButtonComponent';
+import { formatFullDate, getBloodPressureStatus } from '../../../utils/format';
 const CardBloodPressure = ({ item, onNavigation }: any) => {
+  const statusBP = getBloodPressureStatus(item.systolic, item.diastolic);
   return (
     <RowComponent style={styles.container}>
       <View style={styles.valueContainer}>
@@ -16,15 +18,26 @@ const CardBloodPressure = ({ item, onNavigation }: any) => {
       </View>
       <View style={styles.barrier} />
       <View style={styles.noteContainer}>
-        <TextComponent label="11:58, 15/06/2023" style={styles.date} />
-
-        <MarqueeText
-          labelStyle={styles.notifi}
-          style={{ width: '110%' }}
-          label={'Bình thường'}
+        <TextComponent
+          label={formatFullDate(item.timestamp)}
+          style={styles.date}
         />
 
-        <TextComponent label="Nhịp tim: 20 BPM" style={styles.date} />
+        <MarqueeText
+          labelStyle={[
+            styles.notifi,
+            {
+              color: statusBP.color,
+            },
+          ]}
+          style={{ width: '110%' }}
+          label={statusBP.text}
+        />
+
+        <TextComponent
+          label={`Nhịp tim: ${item.pulse} BPM`}
+          style={styles.date}
+        />
       </View>
 
       <ButtonComponent onPress={onNavigation} style={styles.btnEdit}>
@@ -74,6 +87,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: appSizes.xxxLarge,
   },
-  btnEdit:{
-  }
+  btnEdit: {},
 });

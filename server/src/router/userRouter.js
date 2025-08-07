@@ -2,11 +2,12 @@ const express = require("express");
 const {
   runAIAnalysis,
   getUserInfo,
-  saveInfoMeasureBloodPressure,
+  saveInfoMeasureBloodPressure,getMeasureInfo
 } = require("../controller/userController");
 const { protect } = require("../middleware/authMiddleware");
 const userRouter = express.Router();
 userRouter.get("/analyze/:userId", protect, runAIAnalysis);
 userRouter.get("/info/:id", protect, getUserInfo);
 userRouter.post("/save", saveInfoMeasureBloodPressure);
+userRouter.get('/measureinfo/:id', getMeasureInfo)
 module.exports = userRouter;
